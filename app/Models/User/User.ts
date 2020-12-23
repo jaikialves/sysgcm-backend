@@ -27,6 +27,9 @@ export default class User extends BaseModel {
   public gcm_id: string
 
   @column()
+  public rememberMeToken?: string
+
+  @column()
   public status: boolean
 
   @column.dateTime({ autoCreate: true })
