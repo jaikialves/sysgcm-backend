@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import Bairro from 'App/Models/Endereco/Bairro'
 
 export default class Endereco extends BaseModel {
   @column({ isPrimary: true })
@@ -28,4 +29,9 @@ export default class Endereco extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  /* ------------------------------------------------------------------------ */
+
+  @belongsTo(() => Bairro, { localKey: 'uuid', foreignKey: 'bairro_id' })
+  public bairro: BelongsTo<typeof Bairro>
 }

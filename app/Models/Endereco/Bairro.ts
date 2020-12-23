@@ -1,5 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
+
+import Endereco from 'App/Models/Endereco/Enderecos'
+import Municipio from 'App/Models/Endereco/Municipio'
 
 export default class Bairro extends BaseModel {
   @column({ isPrimary: true })
@@ -22,4 +25,12 @@ export default class Bairro extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  /* ------------------------------------------------------------------------ */
+
+  @hasMany(() => Endereco, { localKey: 'uuid', foreignKey: 'bairro_id' })
+  public bairros: HasMany<typeof Endereco>
+
+  @belongsTo(() => Municipio, { localKey: 'uuid', foreignKey: 'municipio_id' })
+  public municipio: BelongsTo<typeof Municipio>
 }
