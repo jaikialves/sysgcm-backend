@@ -24,6 +24,5 @@ Route.get('/', async () => {
   return { hello: 'world' }
 })
 
-Route.get('test', 'EnderecosController.index')
-
-Route.post('test', 'EnderecosController.store')
+// -> enderecos
+import './routes/enderecos.routes'
