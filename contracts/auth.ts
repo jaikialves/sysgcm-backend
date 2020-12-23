@@ -5,7 +5,7 @@
  * file.
  */
 
-import User&#x2F;User from 'App/Models/User/User'
+import User from 'App/Models/User/User'
 
 declare module '@ioc:Adonis/Addons/Auth' {
   /*
@@ -34,9 +34,9 @@ declare module '@ioc:Adonis/Addons/Auth' {
     |
     */
     user: {
-      implementation: LucidProviderContract<typeof User&#x2F;User>,
-      config: LucidProviderConfig<typeof User&#x2F;User>,
-    },
+      implementation: LucidProviderContract<typeof User>
+      config: LucidProviderConfig<typeof User>
+    }
   }
 
   /*
@@ -66,8 +66,8 @@ declare module '@ioc:Adonis/Addons/Auth' {
     |
     */
     api: {
-      implementation: OATGuardContract<'user', 'api'>,
-      config: OATGuardConfig<'user'>,
-    },
+      implementation: OATGuardContract<'user', 'api'>
+      config: OATGuardConfig<'user'>
+    }
   }
 }
