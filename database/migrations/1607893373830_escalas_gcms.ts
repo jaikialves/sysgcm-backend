@@ -7,6 +7,9 @@ export default class EscalasGcms extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary().defaultTo(this.db.rawQuery('uuid_generate_v4()').knexQuery)
 
+      table.dateTime('data_inicio', { useTz: true }).nullable()
+      table.dateTime('data_fim', { useTz: true }).nullable()
+
       table.uuid('gcm_id').references('id').inTable('gcms').onUpdate('CASCADE').onDelete('CASCADE')
       table
         .uuid('escala_id')
@@ -14,8 +17,7 @@ export default class EscalasGcms extends BaseSchema {
         .inTable('escalas')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
-      table.dateTime('data_inicio', { useTz: true }).nullable()
-      table.dateTime('data_fim', { useTz: true }).nullable()
+
       table.text('observacao').nullable()
 
       table.timestamps(true)
