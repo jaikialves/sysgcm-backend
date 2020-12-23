@@ -5,8 +5,6 @@ import Endereco from 'App/Models/Endereco/Enderecos'
 import Municipio from 'App/Models/Endereco/Municipio'
 import DadosPessoais from 'App/Models/Gcm/DadosPessoais'
 
-import Hash from '@ioc:Adonis/Core/Hash'
-
 import {
   atribuicao,
   cutis,
@@ -84,7 +82,7 @@ export default class AdminUserSeeder extends BaseSeeder {
     await User.create({
       nome_usuario: 'gonsalves',
       email: 'gonsalves@gmail.com',
-      password: await Hash.make('123456'),
+      password: '123456',
       role: roles.MASTER,
       gcm_id: gcm.id,
     })

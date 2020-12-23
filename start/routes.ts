@@ -24,5 +24,9 @@ Route.get('/', async () => {
   return { hello: 'world' }
 })
 
+Route.group(() => {
+  Route.post('/login', 'AuthController.login').as('auth.login')
+})
+
 // -> enderecos
 import './routes/enderecos.routes'
