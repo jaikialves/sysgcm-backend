@@ -1,0 +1,44 @@
+import { DateTime } from 'luxon'
+import { BaseModel, beforeSave, column } from '@ioc:Adonis/Lucid/Orm'
+
+import Hash from '@ioc:Adonis/Core/Hash'
+import { roles } from '../Gcm/types/EnumTypes'
+
+export default class User extends BaseModel {
+  @column({ isPrimary: true })
+  public id: string
+
+  @column()
+  public nome_usuario: string
+
+  @column()
+  public email: string
+
+  @column()
+  public password: string
+
+  @column()
+  public role: roles
+
+  @column()
+  public avatar: string
+
+  @column()
+  public gcm_id: string
+
+  @column()
+  public status: boolean
+
+  @column.dateTime({ autoCreate: true })
+  public createdAt: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  public updatedAt: DateTime
+
+  @beforeSave()
+  public static async hashPassword(user: User) {
+    if (user.$dirty.password) {
+      user.password = await Hash.make(user.password)
+    }
+  }
+}
