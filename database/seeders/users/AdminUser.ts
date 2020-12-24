@@ -62,7 +62,7 @@ export default class AdminUserSeeder extends BaseSeeder {
       nome_conjuge: 'Gonçalves',
       nome_filhos: ['Vitoria Caroline Gonçalves', 'Julia Gonçalves'],
       titulo_eleitor: '101811660272',
-      zona_eleitoral: '057011',
+      zona_eleitoral: '057',
       cnh: '02737170006',
       tipo_cnh: tipo_cnh.C,
       validade_cnh: new Date('04-05-2020'),

@@ -16,7 +16,7 @@ export default class EstadoSeeder extends BaseSeeder {
     const rande_xlsx = XLSX.utils.decode_range(<string>file.Sheets[sheet[0]]['!ref'])
 
     if (range_db === rande_xlsx.e.r) {
-      throw new Error('😓  Table already sown!')
+      throw new Error('😓  Tabela já semeada!')
     }
 
     await Estado.createMany(XLSX.utils.sheet_to_json(file.Sheets[sheet[0]])).catch((err) => {

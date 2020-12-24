@@ -30,3 +30,6 @@ Route.group(() => {
 
 // -> enderecos
 import './routes/enderecos.routes'
+
+// -> gcms
+import './routes/gcms.routes'

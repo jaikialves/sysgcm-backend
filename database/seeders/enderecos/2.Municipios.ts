@@ -20,7 +20,7 @@ export default class MunicipiosSeeder extends BaseSeeder {
         // get estado_id
         const estado = await Estado.findBy('codigo_ibge', `${codes.rows[i].codigo_ibge}`)
         if (!estado) {
-          throw new Error('❌  Seed Failed!')
+          throw new Error('❌  Seed Falhou!')
         }
         // read xlsx file
         const file = XLSX.readFile(`${__dirname}/xlsx/cidades/${files_names[i]}`)
@@ -41,9 +41,9 @@ export default class MunicipiosSeeder extends BaseSeeder {
         })
       }
     } else if (checkSeeder.length !== 5703) {
-      throw new Error('😓  Incorrect seed. Reset database.')
+      throw new Error('😓  Seed incorreto. Reinicie o bando de dados!')
     } else {
-      throw new Error('😓  Table already sown!')
+      throw new Error('😓  Tabela já semeada!')
     }
   }
 }

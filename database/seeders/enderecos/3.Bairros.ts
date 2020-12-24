@@ -11,7 +11,7 @@ export default class BairrosSeeder extends BaseSeeder {
     if (checkSeeder.length === 0) {
       const municipio = await Municipio.findBy('codigo_ibge', '3523206')
       if (!municipio) {
-        throw new Error('❌  Seed Failed!')
+        throw new Error('❌  Seed Falhou!')
       }
 
       const file = XLSX.readFile(`${__dirname}/xlsx/bairros/seed_bairros_itarare.xlsx`)

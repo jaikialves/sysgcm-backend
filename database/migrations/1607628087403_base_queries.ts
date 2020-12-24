@@ -7,7 +7,7 @@ export default class BaseQueries extends BaseSchema {
     await this.db.rawQuery('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";').knexQuery
     await this.db.rawQuery('SET TIMEZONE="America/Sao_Paulo";').knexQuery
 
-    // create enumtypes
+    // create enum types
     await this.db.rawQuery("CREATE TYPE roles AS ENUM ('ADMIN', 'MASTER', 'MEMBRO');").knexQuery
     await this.db.rawQuery("CREATE TYPE  sexo AS ENUM ('MASCULINO', 'FEMININO');").knexQuery
     await this.db.rawQuery(
