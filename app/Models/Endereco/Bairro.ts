@@ -9,7 +9,7 @@ export default class Bairro extends BaseModel {
   public id: string
 
   @column()
-  public nome: string
+  public bairro: string
 
   @column()
   public codigo_bairro: string

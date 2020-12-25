@@ -10,7 +10,7 @@ export default class Enderecos extends BaseSchema {
       table.string('logradouro', 200).notNullable()
       table.string('numero', 4).nullable()
       table.string('complemento', 100).nullable()
-      table.string('cep', 15).notNullable()
+      table.string('cep', 8).notNullable()
       table.string('codigo_endereco', 6).nullable()
       table
         .uuid('bairro_id')

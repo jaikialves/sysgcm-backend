@@ -4,8 +4,8 @@ import Endereco from 'App/Models/Endereco/Enderecos'
 
 interface IRequestData {
   logradouro: string
-  numero: string
-  complemento: string
+  numero?: string
+  complemento?: string
   cep: string
   codigo_endereco?: string
   bairro_id: string

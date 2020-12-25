@@ -7,7 +7,7 @@ export default class Bairros extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary().defaultTo(this.db.rawQuery('uuid_generate_v4()').knexQuery)
 
-      table.string('nome', 255).notNullable()
+      table.string('bairro', 255).notNullable()
       table.string('codigo_bairro', 6).nullable()
       table.text('observacao').nullable()
       table.uuid('municipio_id').references('id').inTable('municipios').notNullable()

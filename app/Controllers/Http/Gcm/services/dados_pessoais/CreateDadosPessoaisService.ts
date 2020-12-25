@@ -4,6 +4,7 @@ import Municipio from 'App/Models/Endereco/Municipio'
 import ConflictException from 'App/Exceptions/ConflictException'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 
+import { DateTime } from 'luxon'
 import {
   cutis,
   escolaridade,
@@ -15,26 +16,26 @@ import {
 
 interface IRequestData {
   nome: string
-  rg: string
+  rg?: string
   cpf: string
-  data_nascimento: Date
+  data_nascimento: DateTime
   nome_mae: string
   nome_pai?: string
   telefone: string[]
-  municipio_nascimento: string
+  municipio_nascimento_id: string
   sexo: sexo
   cutis: cutis
-  tipo_sanguineo: tipo_sanguineo
+  tipo_sanguineo?: tipo_sanguineo
   estado_civil: estado_civil
   profissao?: string[]
   escolaridade: escolaridade
   nome_conjuge?: string
   nome_filhos?: string[]
-  titulo_eleitor: string
-  zona_eleitoral: string
-  cnh: string
-  tipo_cnh: tipo_cnh
-  validade_cnh: Date
+  titulo_eleitor?: string
+  zona_eleitoral?: string
+  cnh?: string
+  tipo_cnh?: tipo_cnh
+  validade_cnh?: DateTime
   observacao?: string
 }
 
@@ -47,7 +48,7 @@ class CreateDadosPessoaisService {
     telefone,
     nome_mae,
     nome_pai,
-    municipio_nascimento,
+    municipio_nascimento_id,
     sexo,
     tipo_sanguineo,
     estado_civil,
@@ -78,10 +79,7 @@ class CreateDadosPessoaisService {
       throw new ConflictException('❌  Carteira Nacional de Habilitação já cadastrada. 😓')
     }
 
-    const municipio_exists = await Municipio.findBy(
-      'municipio',
-      municipio_nascimento.toLocaleUpperCase()
-    )
+    const municipio_exists = await Municipio.findBy('municipio', municipio_nascimento_id)
     if (!municipio_exists) {
       throw new NotFoundException('❌  Municipio de nascimento não encontrado. 😓')
     }
