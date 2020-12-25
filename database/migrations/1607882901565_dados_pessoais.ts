@@ -66,7 +66,7 @@ export default class DadosPessoais extends BaseSchema {
           {
             useNative: true,
             existingType: true,
-            enumName: 'estado_civil',
+            enumName: 'escolaridade',
           }
         )
         .nullable()

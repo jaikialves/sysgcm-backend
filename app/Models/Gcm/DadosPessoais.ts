@@ -24,7 +24,7 @@ export default class DadosPessoais extends BaseModel {
   public cpf: string
 
   @column()
-  public data_nascimento: DateTime
+  public data_nascimento: Date
 
   @column()
   public nome_mae: string
@@ -75,7 +75,7 @@ export default class DadosPessoais extends BaseModel {
   public tipo_cnh: tipo_cnh
 
   @column()
-  public validade_cnh: DateTime
+  public validade_cnh: Date
 
   @column()
   public observacao: string

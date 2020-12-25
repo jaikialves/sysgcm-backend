@@ -8,6 +8,7 @@ import DadosPessoais from 'App/Models/Gcm/DadosPessoais'
 import {
   atribuicao,
   cutis,
+  escolaridade,
   estado_civil,
   roles,
   sexo,
@@ -31,7 +32,7 @@ export default class AdminUserSeeder extends BaseSeeder {
       logradouro: 'RUA JOÃO PRADO MARGARIDO',
       numero: '249',
       complemento: '',
-      cep: '18460-000',
+      cep: '18460000',
       codigo_endereco: '',
       bairro_id: bairro.id,
     })
@@ -58,7 +59,7 @@ export default class AdminUserSeeder extends BaseSeeder {
       tipo_sanguineo: tipo_sanguineo['O+'],
       estado_civil: estado_civil.CASADO,
       profissao: ['Guarda Civil Municipal', 'Pintor'],
-      //escolaridade: escolaridade['FUNDAMENTAL-COMPLETO'],
+      escolaridade: escolaridade['FUNDAMENTAL-COMPLETO'],
       nome_conjuge: 'Gonçalves',
       nome_filhos: ['Vitoria Caroline Gonçalves', 'Julia Gonçalves'],
       titulo_eleitor: '101811660272',

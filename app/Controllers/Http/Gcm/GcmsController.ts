@@ -3,11 +3,11 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import CreateDadosPessoaisValidator from 'App/Validators/gcm/CreateDadosPessoaisValidator'
 import CreateBairroValidator from 'App/Validators/endereco/CreateBairroValidator'
 import CreateEnderecoValidator from 'App/Validators/endereco/CreateEnderecoValidator'
+import CreateGcmValidator from 'App/Validators/gcm/CreateGcmValidator'
 
 import CreateBairroService from 'App/Controllers/Http/Endereco/services/bairro/CreateBairroService'
 import CreateEnderecoService from '../Endereco/services/endereco/CreateEnderecoService'
 import CreateDadosPessoaisService from './services/dados_pessoais/CreateDadosPessoaisService'
-import CreateGcmValidator from 'App/Validators/gcm/CreateGcmValidator'
 import CreateGcmService from 'App/Controllers/Http/Gcm/services/gcm/CreateGcmService'
 
 export default class GcmsController {

@@ -69,17 +69,21 @@ class CreateDadosPessoaisService {
       throw new ConflictException('❌  Cpf já cadastrado. 😓')
     }
 
-    const titulo_eleitor_exists = await DadosPessoais.findBy('titulo_eleitor', titulo_eleitor)
-    if (titulo_eleitor_exists) {
-      throw new ConflictException('❌  Titulo de eleitor já cadastrado. 😓')
+    if (titulo_eleitor) {
+      const titulo_eleitor_exists = await DadosPessoais.findBy('titulo_eleitor', titulo_eleitor)
+      if (titulo_eleitor_exists) {
+        throw new ConflictException('❌  Titulo de eleitor já cadastrado. 😓')
+      }
     }
 
-    const chn_exists = await DadosPessoais.findBy('cnh', cnh)
-    if (chn_exists) {
-      throw new ConflictException('❌  Carteira Nacional de Habilitação já cadastrada. 😓')
+    if (cnh) {
+      const chn_exists = await DadosPessoais.findBy('cnh', cnh)
+      if (chn_exists) {
+        throw new ConflictException('❌  Carteira Nacional de Habilitação já cadastrada. 😓')
+      }
     }
 
-    const municipio_exists = await Municipio.findBy('municipio', municipio_nascimento_id)
+    const municipio_exists = await Municipio.findBy('id', municipio_nascimento_id)
     if (!municipio_exists) {
       throw new NotFoundException('❌  Municipio de nascimento não encontrado. 😓')
     }
@@ -89,7 +93,7 @@ class CreateDadosPessoaisService {
       nome,
       rg,
       cpf,
-      data_nascimento,
+      data_nascimento: new Date(data_nascimento.toISODate()),
       telefone,
       nome_mae,
       nome_pai,
@@ -105,7 +109,7 @@ class CreateDadosPessoaisService {
       zona_eleitoral,
       cnh,
       tipo_cnh,
-      validade_cnh,
+      validade_cnh: validade_cnh ? new Date(validade_cnh.toISODate()) : validade_cnh,
       observacao,
     })
 
