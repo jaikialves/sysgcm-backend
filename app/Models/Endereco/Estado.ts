@@ -26,6 +26,6 @@ export default class Estado extends BaseModel {
 
   /* ------------------------------------------------------------------------ */
 
-  @hasMany(() => Municipio, { localKey: 'uuid', foreignKey: 'estado_id' })
+  @hasMany(() => Municipio, { localKey: 'id', foreignKey: 'estado_id' })
   public municipios: HasMany<typeof Municipio>
 }

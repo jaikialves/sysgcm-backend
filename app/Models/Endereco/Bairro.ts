@@ -17,7 +17,7 @@ export default class Bairro extends BaseModel {
   @column()
   public observacao: string
 
-  @column()
+  @column({ serializeAs: null })
   public municipio_id: string
 
   @column.dateTime({ autoCreate: true, serializeAs: null })
@@ -28,9 +28,9 @@ export default class Bairro extends BaseModel {
 
   /* ------------------------------------------------------------------------ */
 
-  @hasMany(() => Endereco, { localKey: 'uuid', foreignKey: 'bairro_id' })
+  @hasMany(() => Endereco, { localKey: 'id', foreignKey: 'endereco_id' })
   public bairros: HasMany<typeof Endereco>
 
-  @belongsTo(() => Municipio, { localKey: 'uuid', foreignKey: 'municipio_id' })
+  @belongsTo(() => Municipio, { localKey: 'id', foreignKey: 'municipio_id' })
   public municipio: BelongsTo<typeof Municipio>
 }

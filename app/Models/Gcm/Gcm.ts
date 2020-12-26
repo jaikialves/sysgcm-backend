@@ -11,25 +11,25 @@ export default class Gcm extends BaseModel {
   @column()
   public nome_guerra: string
 
-  @column()
+  @column({ serializeAs: null })
   public dados_pessoais_id: string
 
-  @column()
+  @column({ serializeAs: null })
   public endereco_id: string
 
   @column()
   public atribuicao: atribuicao
 
   @column()
-  public historico: string[]
+  public historico: string
 
-  @column()
+  @column({ serializeAs: null })
   public status: boolean
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: null })
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
 
   /* ------------------------------------------------------------------------ */

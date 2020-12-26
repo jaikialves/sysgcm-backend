@@ -11,13 +11,13 @@ export default class Municipio extends BaseModel {
   @column()
   public codigo_ibge: string
 
-  @column()
+  @column({ serializeAs: 'cidade' })
   public municipio: string
 
   @column()
   public gentilico: string
 
-  @column()
+  @column({ serializeAs: null })
   public estado_id: string
 
   @column.dateTime({ autoCreate: true, serializeAs: null })
@@ -28,9 +28,9 @@ export default class Municipio extends BaseModel {
 
   /* ------------------------------------------------------------------------ */
 
-  @hasMany(() => Bairro, { localKey: 'uuid', foreignKey: 'bairro_id' })
+  @hasMany(() => Bairro, { localKey: 'id', foreignKey: 'bairro_id' })
   public enderecos: HasMany<typeof Bairro>
 
-  @belongsTo(() => Estado, { localKey: 'uuid', foreignKey: 'estado_id' })
+  @belongsTo(() => Estado, { localKey: 'id', foreignKey: 'estado_id' })
   public estado: BelongsTo<typeof Estado>
 }

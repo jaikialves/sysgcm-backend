@@ -24,7 +24,11 @@ export default class DadosPessoais extends BaseModel {
   @column()
   public cpf: string
 
-  @column()
+  @column({
+    serialize: (value: Date) => {
+      return DateTime.fromISO(value.toISOString()).toLocaleString()
+    },
+  })
   public data_nascimento: Date
 
   @column()
@@ -36,7 +40,7 @@ export default class DadosPessoais extends BaseModel {
   @column()
   public telefone: string[]
 
-  @column()
+  @column({ serializeAs: null })
   public municipio_nascimento_id: string
 
   @column()
@@ -75,16 +79,20 @@ export default class DadosPessoais extends BaseModel {
   @column()
   public tipo_cnh: tipo_cnh
 
-  @column()
+  @column({
+    serialize: (value: Date) => {
+      return DateTime.fromISO(value.toISOString()).toLocaleString()
+    },
+  })
   public validade_cnh: Date
 
   @column()
   public observacao: string
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: null })
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
 
   /* ------------------------------------------------------------------------ */
