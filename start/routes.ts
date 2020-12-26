@@ -33,3 +33,6 @@ import './routes/enderecos.routes'
 
 // -> gcms
 import './routes/gcms.routes'
+
+// -> tests routes
+Route.get('test', 'TestsController.index')

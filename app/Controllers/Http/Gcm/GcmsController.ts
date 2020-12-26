@@ -9,6 +9,7 @@ import CreateBairroService from 'App/Controllers/Http/Endereco/services/bairro/C
 import CreateEnderecoService from '../Endereco/services/endereco/CreateEnderecoService'
 import CreateDadosPessoaisService from './services/dados_pessoais/CreateDadosPessoaisService'
 import CreateGcmService from 'App/Controllers/Http/Gcm/services/gcm/CreateGcmService'
+import CreateKeycodeService from 'App/Controllers/Http/User/services/CreateKeycodeService'
 
 export default class GcmsController {
   public async create({ request, response }: HttpContextContract) {
@@ -31,13 +32,16 @@ export default class GcmsController {
     const dados_pessoais_id = await CreateDadosPessoaisService.execute(dados_pessoais_dto)
 
     // -> create gcm
-    const gcm = await CreateGcmService.execute({
+    const gcm_id = await CreateGcmService.execute({
       nome_guerra: gcm_dto.nome_guerra,
       dados_pessoais_id,
       endereco_id,
       atribuicao: gcm_dto.atribuicao,
     })
 
-    return response.json(gcm)
+    // -> create keycode
+    const keycode = await CreateKeycodeService.execute(gcm_id)
+
+    return response.json(keycode)
   }
 }

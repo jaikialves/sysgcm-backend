@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 
 import {
   sexo,
@@ -9,6 +9,7 @@ import {
   tipo_sanguineo,
   tipo_cnh,
 } from 'App/Models/Gcm/types/EnumTypes'
+import Gcm from './Gcm'
 
 export default class DadosPessoais extends BaseModel {
   @column({ isPrimary: true })
@@ -85,4 +86,9 @@ export default class DadosPessoais extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  /* ------------------------------------------------------------------------ */
+
+  @belongsTo(() => Gcm)
+  public gcm: BelongsTo<typeof Gcm>
 }

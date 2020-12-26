@@ -76,7 +76,6 @@ export default class AdminUserSeeder extends BaseSeeder {
       dados_pessoais_id: dados_pessoais.id,
       endereco_id: endereco.id,
       atribuicao: atribuicao['SUB-COMANDANTE'],
-      historico: ['Sem histórico'],
     })
 
     // -> seed user

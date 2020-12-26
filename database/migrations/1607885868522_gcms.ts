@@ -29,7 +29,7 @@ export default class Gcms extends BaseSchema {
           { useNative: true, existingType: true, enumName: 'atribuicao' }
         )
         .notNullable()
-      table.text('historico').nullable().defaultTo('[]')
+      table.text('historico').nullable()
       table.boolean('status').defaultTo(true)
 
       table.timestamps(true)

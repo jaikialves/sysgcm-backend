@@ -13,7 +13,7 @@ export default class DadosPessoais extends BaseSchema {
       table.date('data_nascimento').notNullable()
       table.string('nome_mae', 40).notNullable()
       table.string('nome_pai', 40).nullable()
-      table.string('telefone').notNullable().defaultTo('[]')
+      table.string('telefone', 11).nullable()
       table
         .uuid('municipio_nascimento_id')
         .references('id')
@@ -48,7 +48,7 @@ export default class DadosPessoais extends BaseSchema {
           enumName: 'estado_civil',
         })
         .nullable()
-      table.string('profissao').notNullable().defaultTo('[]')
+      table.string('profissao', 40).nullable()
       table
         .enu(
           'escolaridade',
@@ -71,7 +71,7 @@ export default class DadosPessoais extends BaseSchema {
         )
         .nullable()
       table.string('nome_conjuge', 20).nullable()
-      table.string('nome_filhos').notNullable().defaultTo('[]')
+      table.string('nome_filhos', 40).nullable()
       table.string('titulo_eleitor', 14).nullable()
       table.string('zona_eleitoral', 3).nullable()
       table.string('cnh', 11).nullable()
