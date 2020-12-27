@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasOne, HasOne } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 
-import Gcm from 'App/Models/Gcm/Gcm'
+import User from './User'
 
 export default class Keycode extends BaseModel {
   @column({ isPrimary: true, serializeAs: null })
@@ -21,10 +21,11 @@ export default class Keycode extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
+
   /* ------------------------------------------------------------------------ */
 
-  @hasOne(() => Gcm, { localKey: 'uuid', foreignKey: 'gcm_id' })
-  public gcm: HasOne<typeof Gcm>
+  @belongsTo(() => User, { localKey: 'id', foreignKey: 'gcm_id' })
+  public user: BelongsTo<typeof User>
 
   /* ------------------------------------------------------------------------ */
 }

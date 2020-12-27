@@ -7,8 +7,8 @@ export default class Users extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary().defaultTo(this.db.rawQuery('uuid_generate_v4()').knexQuery)
 
-      table.string('nome_usuario', 15).notNullable()
-      table.string('email', 30).nullable()
+      table.string('nome_usuario', 20).notNullable()
+      table.string('email', 100).nullable()
       table.string('password').notNullable()
       table
         .enu('role', ['ADMIN', 'MASTER', 'MEMBRO'], {

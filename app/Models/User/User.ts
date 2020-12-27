@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeSave, column } from '@ioc:Adonis/Lucid/Orm'
-
+import { BaseModel, beforeSave, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
 import Hash from '@ioc:Adonis/Core/Hash'
+
 import { roles } from '../Gcm/types/EnumTypes'
+import Keycode from './Keycode'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -37,6 +38,13 @@ export default class User extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  /* ------------------------------------------------------------------------ */
+
+  @hasOne(() => Keycode, { localKey: 'gcm_id', foreignKey: 'id' })
+  public keycode: HasOne<typeof Keycode>
+
+  /* ------------------------------------------------------------------------ */
 
   @beforeSave()
   public static async hashPassword(user: User) {

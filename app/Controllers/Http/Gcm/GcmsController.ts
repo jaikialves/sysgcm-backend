@@ -9,7 +9,7 @@ import CreateBairroService from 'App/Controllers/Http/Endereco/services/bairro/C
 import CreateEnderecoService from '../Endereco/services/endereco/CreateEnderecoService'
 import CreateDadosPessoaisService from './services/dados_pessoais/CreateDadosPessoaisService'
 import CreateGcmService from 'App/Controllers/Http/Gcm/services/gcm/CreateGcmService'
-import CreateKeycodeService from 'App/Controllers/Http/User/services/CreateKeycodeService'
+import CreateKeycodeService from 'App/Controllers/Http/User/services/keycode/CreateKeycodeService'
 
 export default class GcmsController {
   public async create({ request, response }: HttpContextContract) {
