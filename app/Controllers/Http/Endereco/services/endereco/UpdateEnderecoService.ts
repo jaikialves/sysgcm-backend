@@ -24,21 +24,21 @@ class UpdateEnderecoService {
   }: IRequestData) {
     const endereco_exists = await Endereco.findBy('id', endereco_id)
     if (!endereco_exists) {
-      throw new NotFoundException('Error ao atualizar informações: endereço não encontrado.')
+      throw new NotFoundException('Erro ao atualizar informações: endereço não encontrado.')
     }
 
     if (codigo_endereco) {
       const codigo_endereco_exists = await Endereco.findBy('codigo_endereco', codigo_endereco)
       if (codigo_endereco_exists) {
         throw new ConflictException(
-          'Error ao atualizar informações: codigo do endereço já existente.'
+          'Erro ao atualizar informações: codigo do endereço já existente.'
         )
       }
     }
 
     const bairro = await Bairro.findBy('id', bairros_id)
     if (!bairro) {
-      throw new NotFoundException('Error ao atualizar informações: bairro não encontrado.')
+      throw new NotFoundException('Erro ao atualizar informações: bairro não encontrado.')
     }
 
     endereco_exists.merge({ logradouro, complemento, cep, codigo_endereco, bairro_id: bairro.id })
@@ -48,7 +48,7 @@ class UpdateEnderecoService {
 
       return endereco_exists.id
     } catch (error) {
-      throw new AppException(`Error ao atualizar informações: ${error}.`)
+      throw new AppException(`Erro ao atualizar informações: ${error}.`)
     }
   }
 }

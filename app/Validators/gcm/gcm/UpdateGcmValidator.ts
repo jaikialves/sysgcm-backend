@@ -9,9 +9,8 @@ export default class UpdateGcmValidator {
     nome_guerra: schema.string.optional({ trim: true, escape: true }, [
       rules.minLength(2),
       rules.maxLength(20),
-      rules.required(),
     ]),
-    atribuicao: schema.enum.optional(Object.values(atribuicao), [rules.required()]),
+    atribuicao: schema.enum.optional(Object.values(atribuicao), []),
     historico: schema.string.optional({}, []),
     status: schema.boolean.optional([]),
   })

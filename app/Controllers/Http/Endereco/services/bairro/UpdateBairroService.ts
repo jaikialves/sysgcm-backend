@@ -21,16 +21,14 @@ class UpdateBairroService {
   }: IRequestData) {
     const bairro_exists = await Bairro.findBy('id', bairro_id)
     if (!bairro_exists) {
-      throw new NotFoundException('Error ao atualizar informações: Bairro não encontrado.')
+      throw new NotFoundException('Erro ao atualizar informações: Bairro não encontrado.')
     }
 
     // -> check codigo_bairros exists
     if (codigo_bairro) {
       const codigo_bairro_exists = await Bairro.findBy('codigo_bairro', codigo_bairro)
       if (codigo_bairro_exists) {
-        throw new ConflictException(
-          'Error ao atualizar informações: codigo do bairro já existente.'
-        )
+        throw new ConflictException('Erro ao atualizar informações: codigo do bairro já existente.')
       }
     }
 
@@ -46,7 +44,7 @@ class UpdateBairroService {
 
       return bairro_exists.id
     } catch (error) {
-      throw new AppException(`Error ao atualizar informações: ${error}.`)
+      throw new AppException(`Erro ao atualizar informações: ${error}.`)
     }
   }
 }

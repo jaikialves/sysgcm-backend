@@ -36,7 +36,7 @@ export default class UpdateDadosPessoaisValidator {
         rules.maxLength(10),
         rules.unique({ table: 'dados_pessoais', column: 'telefone' }),
       ])
-      .members(schema.string.optional({ trim: true, escape: true }, [])),
+      .members(schema.string({ trim: true, escape: true }, [])),
     municipio_nascimento_id: schema.string.optional({}, [
       rules.uuid(),
       rules.exists({ table: 'municipios', column: 'id' }),

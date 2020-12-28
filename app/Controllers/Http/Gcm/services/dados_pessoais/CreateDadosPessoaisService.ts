@@ -86,7 +86,7 @@ class CreateDadosPessoaisService {
 
     const municipio_exists = await Municipio.findBy('id', municipio_nascimento_id)
     if (!municipio_exists) {
-      throw new NotFoundException('Error no cadastro: Municipio de nascimento não encontrado.')
+      throw new NotFoundException('Erro no cadastro: Municipio de nascimento não encontrado.')
     }
 
     // -> save on db

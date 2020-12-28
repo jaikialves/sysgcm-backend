@@ -19,11 +19,14 @@ import CreateDadosPessoaisService from './services/dados_pessoais/CreateDadosPes
 import CreateGcmService from 'App/Controllers/Http/Gcm/services/gcm/CreateGcmService'
 import CreateKeycodeService from 'App/Controllers/Http/User/services/keycode/CreateKeycodeService'
 import UpdateBairroService from 'App/Controllers/Http/Endereco/services/bairro/UpdateBairroService'
+import DeleteGcmService from 'App/Controllers/Http/Gcm/services/gcm/DeleteGcmService'
 
 import AppException from 'App/Exceptions/AppException'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import Gcm from 'App/Models/Gcm/Gcm'
-import DeleteGcmService from 'App/Controllers/Http/Gcm/services/gcm/DeleteGcmService'
+import UpdateEnderecoService from 'App/Controllers/Http/Endereco/services/endereco/UpdateEnderecoService'
+import UpdateDadosPessoaisService from 'App/Controllers/Http/Gcm/services/dados_pessoais/UpdateDadosPessoaisService'
+import UpdateGcmService from 'App/Controllers/Http/Gcm/services/gcm/UpdateGcmService'
 
 export default class GcmsController {
   //* -> INDEX
@@ -84,12 +87,24 @@ export default class GcmsController {
   public async update({ request, response }: HttpContextContract) {
     const { id } = request.params()
     if (!isUUID(id, 4)) {
-      throw new AppException('Error ao atualizar informações: parâmetro incorreto.')
+      throw new AppException('Erro ao atualizar informações: parâmetro incorreto.')
     }
 
-    const gcm_exists = await Gcm.findBy('id', id)
+    const gcm_exists = await Gcm.query()
+      .where('id', id)
+      .where('status', true)
+      .preload('dados_pessoais')
+      .preload('endereco', (query) => {
+        query.preload('bairro', (query) => {
+          query.preload('municipio', (query) => {
+            query.preload('estado')
+          })
+        })
+      })
+      .first()
+
     if (!gcm_exists) {
-      throw new NotFoundException('rror ao atualizar informações: gcm não encontrado.')
+      throw new NotFoundException('Erro ao atualizar informações: gcm não encontrado.')
     }
 
     const bairro_dto = await request.validate(UpdateBairroValidator)
@@ -98,13 +113,61 @@ export default class GcmsController {
     const gcm_dto = await request.validate(UpdateGcmValidator)
 
     // -> update endereco
-    const bairro = await UpdateBairroService.execute({})
+    const bairro_id = await UpdateBairroService.execute({
+      bairro_id: gcm_exists.endereco.bairro_id,
+      bairro: bairro_dto.bairro,
+      codigo_bairro: bairro_dto.codigo_bairro,
+      observacao: bairro_dto.observacao,
+      municipio_id: bairro_dto.municipio_id,
+    })
+
+    const endereco_id = await UpdateEnderecoService.execute({
+      endereco_id: gcm_exists.endereco_id,
+      logradouro: endereco_dto.logradouro,
+      complemento: endereco_dto.complemento,
+      cep: endereco_dto.cep,
+      codigo_endereco: endereco_dto.codigo_endereco,
+      bairros_id: bairro_id,
+    })
 
     // -> update dados pessoais
+    const dados_pessoais_id = await UpdateDadosPessoaisService.execute({
+      dados_pessoais_id: gcm_exists.dados_pessoais_id,
+      nome: dados_pessoais_dto.nome,
+      rg: dados_pessoais_dto.rg,
+      cpf: dados_pessoais_dto.cpf,
+      data_nascimento: dados_pessoais_dto.data_nascimento,
+      telefone: dados_pessoais_dto.telefone,
+      nome_mae: dados_pessoais_dto.nome_mae,
+      nome_pai: dados_pessoais_dto.nome_pai,
+      municipio_nascimento_id: dados_pessoais_dto.municipio_nascimento_id,
+      sexo: dados_pessoais_dto.sexo,
+      cutis: dados_pessoais_dto.cutis,
+      tipo_sanguineo: dados_pessoais_dto.tipo_sanguineo,
+      estado_civil: dados_pessoais_dto.estado_civil,
+      profissao: dados_pessoais_dto.profissao,
+      escolaridade: dados_pessoais_dto.escolaridade,
+      nome_conjuge: dados_pessoais_dto.nome_conjuge,
+      titulo_eleitor: dados_pessoais_dto.titulo_eleitor,
+      zona_eleitoral: dados_pessoais_dto.zona_eleitoral,
+      cnh: dados_pessoais_dto.cnh,
+      tipo_cnh: dados_pessoais_dto.tipo_cnh,
+      validade_cnh: dados_pessoais_dto.validade_cnh,
+      observacao: dados_pessoais_dto.observacao,
+    })
 
     // -> update gcm
+    const gcm_id = await UpdateGcmService.execute({
+      gcm_id: gcm_exists.id,
+      nome_guerra: gcm_dto.nome_guerra,
+      dados_pessoais_id,
+      endereco_id,
+      atribuicao: gcm_dto.atribuicao,
+      historico: gcm_dto.historico,
+      status: gcm_dto.status,
+    })
 
-    return response.json('')
+    return response.json(gcm_id)
   }
 
   //* -> DELETE

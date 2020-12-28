@@ -66,14 +66,7 @@ class UpdateDadosPessoaisService {
   }: IRequestData) {
     const dados_pessoais_exists = await DadosPessoais.findBy('id', dados_pessoais_id)
     if (!dados_pessoais_exists) {
-      throw new NotFoundException('Error ao atualizar informações: dados pessoais não encontrado.')
-    }
-
-    const municipio_exists = await Municipio.findBy('id', municipio_nascimento_id)
-    if (!municipio_exists) {
-      throw new NotFoundException(
-        'Error ao atualizar informações: municipio de nascimento não encontrado.'
-      )
+      throw new NotFoundException('Erro ao atualizar informações: dados pessoais não encontrado.')
     }
 
     dados_pessoais_exists.merge({
@@ -84,7 +77,7 @@ class UpdateDadosPessoaisService {
       telefone,
       nome_mae,
       nome_pai,
-      municipio_nascimento_id: municipio_exists.id,
+      municipio_nascimento_id,
       sexo,
       cutis,
       tipo_sanguineo,
@@ -106,7 +99,7 @@ class UpdateDadosPessoaisService {
 
       return dados_pessoais_exists.id
     } catch (error) {
-      throw new AppException(`Error ao atualizar informações: ${error}.`)
+      throw new AppException(`Erro ao atualizar informações: ${error}.`)
     }
   }
 }

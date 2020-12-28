@@ -15,7 +15,7 @@ class IndexGcmService {
           })
         })
     } catch (error) {
-      throw new AppException('Error ao processar dados, tente novamente mais tarde.')
+      throw new AppException('Erro ao processar dados, tente novamente mais tarde.')
     }
   }
 }

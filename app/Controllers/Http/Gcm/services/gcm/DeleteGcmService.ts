@@ -14,7 +14,7 @@ class DeleteGcmService {
     try {
       await gcm_exists.save()
     } catch (error) {
-      throw new AppException('Error ao deletar gcm, tente novamente mais tarde.')
+      throw new AppException('Erro ao deletar gcm, tente novamente mais tarde.')
     }
   }
 }
