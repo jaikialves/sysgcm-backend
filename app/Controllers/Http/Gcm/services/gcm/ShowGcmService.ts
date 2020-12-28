@@ -6,7 +6,9 @@ class ShowGcmService {
     const gcm_exists = await Gcm.query()
       .where('id', gcm_id)
       .where('status', true)
-      .preload('dados_pessoais')
+      .preload('dados_pessoais', (query) => {
+        query.preload('municipio_nascimento')
+      })
       .preload('endereco', (query) => {
         query.preload('bairro', (query) => {
           query.preload('municipio', (query) => {

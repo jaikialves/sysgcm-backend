@@ -6,7 +6,9 @@ class IndexGcmService {
     try {
       return await Gcm.query()
         .where('status', true)
-        .preload('dados_pessoais')
+        .preload('dados_pessoais', (query) => {
+          query.preload('municipio_nascimento')
+        })
         .preload('endereco', (query) => {
           query.preload('bairro', (query) => {
             query.preload('municipio', (query) => {
@@ -15,7 +17,7 @@ class IndexGcmService {
           })
         })
     } catch (error) {
-      throw new AppException('Erro ao processar dados, tente novamente mais tarde.')
+      throw new AppException(`Erro ao processar dados, tente novamente mais tarde. ${error}`)
     }
   }
 }

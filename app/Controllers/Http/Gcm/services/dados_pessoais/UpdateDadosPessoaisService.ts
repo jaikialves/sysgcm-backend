@@ -7,9 +7,9 @@ import {
   tipo_cnh,
   tipo_sanguineo,
 } from 'App/Models/Gcm/types/EnumTypes'
+
 import DadosPessoais from 'App/Models/Gcm/DadosPessoais'
 import NotFoundException from 'App/Exceptions/NotFoundException'
-import Municipio from 'App/Models/Endereco/Municipio'
 import AppException from 'App/Exceptions/AppException'
 
 interface IRequestData {

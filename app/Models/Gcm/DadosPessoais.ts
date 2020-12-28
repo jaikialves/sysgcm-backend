@@ -1,6 +1,9 @@
 import { DateTime } from 'luxon'
 import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 
+import Gcm from './Gcm'
+import Municipio from 'App/Models/Endereco/Municipio'
+
 import {
   sexo,
   cutis,
@@ -9,7 +12,6 @@ import {
   tipo_sanguineo,
   tipo_cnh,
 } from 'App/Models/Gcm/types/EnumTypes'
-import Gcm from './Gcm'
 
 export default class DadosPessoais extends BaseModel {
   @column({ isPrimary: true })
@@ -99,4 +101,7 @@ export default class DadosPessoais extends BaseModel {
 
   @belongsTo(() => Gcm)
   public gcm: BelongsTo<typeof Gcm>
+
+  @belongsTo(() => Municipio, { localKey: 'id', foreignKey: 'municipio_nascimento_id' })
+  public municipio_nascimento: BelongsTo<typeof Municipio>
 }
