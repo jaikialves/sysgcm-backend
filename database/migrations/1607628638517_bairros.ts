@@ -10,7 +10,13 @@ export default class Bairros extends BaseSchema {
       table.string('bairro', 255).notNullable()
       table.string('codigo_bairro', 6).nullable()
       table.text('observacao').nullable()
-      table.uuid('municipio_id').references('id').inTable('municipios').notNullable()
+      table
+        .uuid('municipio_id')
+        .references('id')
+        .inTable('municipios')
+        .notNullable()
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE')
 
       table.timestamps(true)
     })

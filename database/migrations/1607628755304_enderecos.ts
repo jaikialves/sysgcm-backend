@@ -19,6 +19,7 @@ export default class Enderecos extends BaseSchema {
         .notNullable()
         .unique()
         .onUpdate('CASCADE')
+        .onDelete('CASCADE')
 
       table.timestamps(true)
     })

@@ -4,7 +4,10 @@ import Municipio from 'App/Models/Endereco/Municipio'
 
 export default class MunicipiosController {
   public async index({ response }: HttpContextContract) {
-    const municipios = await Municipio.query().select('*').orderBy('municipio', 'asc')
+    const municipios = await Municipio.query()
+      .select('*')
+      .preload('estado')
+      .orderBy('municipio', 'asc')
 
     return response.json(municipios)
   }

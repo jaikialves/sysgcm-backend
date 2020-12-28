@@ -10,7 +10,13 @@ export default class Municipios extends BaseSchema {
       table.string('codigo_ibge', 7)
       table.string('municipio', 50)
       table.string('gentilico', 100)
-      table.uuid('estado_id').references('id').inTable('estados').notNullable().onUpdate('CASCADE')
+      table
+        .uuid('estado_id')
+        .references('id')
+        .inTable('estados')
+        .notNullable()
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE')
 
       table.timestamps(true)
     })
