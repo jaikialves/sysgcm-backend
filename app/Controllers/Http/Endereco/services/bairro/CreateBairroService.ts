@@ -14,17 +14,26 @@ class CreateBairroService {
     // -> find and check municipio exists
     const check_municipio = await Municipio.findBy('id', municipio_id)
     if (!check_municipio) {
-      throw new NotFoundException('❌  Municipio não encontrado. 😓')
+      throw new NotFoundException('Municipio não encontrado.')
     }
 
-    const new_bairro = await Bairro.create({
-      codigo_bairro,
-      bairro,
-      observacao,
-      municipio_id: check_municipio.id,
-    })
+    if (codigo_bairro) {
+      const bairro_exists = await Bairro.findBy('codigo_bairro', codigo_bairro)
+      if (!bairro_exists) {
+        throw new NotFoundException('Codigo do bairro não encontrado.')
+      }
 
-    return new_bairro.id
+      return bairro_exists.id
+    } else {
+      const new_bairro = await Bairro.create({
+        codigo_bairro,
+        bairro,
+        observacao,
+        municipio_id: check_municipio.id,
+      })
+
+      return new_bairro.id
+    }
   }
 }
 

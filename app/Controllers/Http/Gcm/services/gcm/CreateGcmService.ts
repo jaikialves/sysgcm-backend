@@ -16,13 +16,13 @@ class CreateGcmService {
     // -> check endereco exists
     const endereco_exists = await Endereco.findBy('id', endereco_id)
     if (!endereco_exists) {
-      throw new NotFoundException('❌ Erro no cadastro: Endereço não encontrado. 😓')
+      throw new NotFoundException('Erro no cadastro: Endereço não encontrado.')
     }
 
     // -> check dados pessoais exists
     const dados_pessoais_exists = await DadosPessoais.findBy('id', dados_pessoais_id)
     if (!dados_pessoais_exists) {
-      throw new NotFoundException("❌ Erro no cadastro: Dados Pessoais não encontrado. 😓'")
+      throw new NotFoundException('Erro no cadastro: Dados Pessoais não encontrado.')
     }
 
     const gcm = await Gcm.create({

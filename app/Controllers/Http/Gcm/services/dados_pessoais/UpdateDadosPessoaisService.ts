@@ -1,9 +1,3 @@
-import DadosPessoais from 'App/Models/Gcm/DadosPessoais'
-import Municipio from 'App/Models/Endereco/Municipio'
-
-import ConflictException from 'App/Exceptions/ConflictException'
-import NotFoundException from 'App/Exceptions/NotFoundException'
-
 import { DateTime } from 'luxon'
 import {
   cutis,
@@ -13,22 +7,27 @@ import {
   tipo_cnh,
   tipo_sanguineo,
 } from 'App/Models/Gcm/types/EnumTypes'
+import DadosPessoais from 'App/Models/Gcm/DadosPessoais'
+import NotFoundException from 'App/Exceptions/NotFoundException'
+import Municipio from 'App/Models/Endereco/Municipio'
+import AppException from 'App/Exceptions/AppException'
 
 interface IRequestData {
-  nome: string
+  dados_pessoais_id: string
+  nome?: string
   rg?: string
-  cpf: string
-  data_nascimento: DateTime
-  nome_mae: string
+  cpf?: string
+  data_nascimento?: DateTime
+  nome_mae?: string
   nome_pai?: string
-  telefone: string[]
-  municipio_nascimento_id: string
-  sexo: sexo
-  cutis: cutis
+  telefone?: string[]
+  municipio_nascimento_id?: string
+  sexo?: sexo
+  cutis?: cutis
   tipo_sanguineo?: tipo_sanguineo
-  estado_civil: estado_civil
+  estado_civil?: estado_civil
   profissao?: string[]
-  escolaridade: escolaridade
+  escolaridade?: escolaridade
   nome_conjuge?: string
   nome_filhos?: string[]
   titulo_eleitor?: string
@@ -39,8 +38,9 @@ interface IRequestData {
   observacao?: string
 }
 
-class CreateDadosPessoaisService {
+class UpdateDadosPessoaisService {
   public async execute({
+    dados_pessoais_id,
     nome,
     rg,
     cpf,
@@ -64,33 +64,19 @@ class CreateDadosPessoaisService {
     validade_cnh,
     observacao,
   }: IRequestData) {
-    // -> checker  exists
-    const cpf_exists = await DadosPessoais.findBy('cpf', cpf)
-    if (cpf_exists) {
-      throw new ConflictException('Cpf já cadastrado.')
-    }
-
-    if (titulo_eleitor) {
-      const titulo_eleitor_exists = await DadosPessoais.findBy('titulo_eleitor', titulo_eleitor)
-      if (titulo_eleitor_exists) {
-        throw new ConflictException('Titulo de eleitor já cadastrado.')
-      }
-    }
-
-    if (cnh) {
-      const chn_exists = await DadosPessoais.findBy('cnh', cnh)
-      if (chn_exists) {
-        throw new ConflictException('Carteira Nacional de Habilitação já cadastrada.')
-      }
+    const dados_pessoais_exists = await DadosPessoais.findBy('id', dados_pessoais_id)
+    if (!dados_pessoais_exists) {
+      throw new NotFoundException('Error ao atualizar informações: dados pessoais não encontrado.')
     }
 
     const municipio_exists = await Municipio.findBy('id', municipio_nascimento_id)
     if (!municipio_exists) {
-      throw new NotFoundException('Error no cadastro: Municipio de nascimento não encontrado.')
+      throw new NotFoundException(
+        'Error ao atualizar informações: municipio de nascimento não encontrado.'
+      )
     }
 
-    // -> save on db
-    const dados_pessoais = await DadosPessoais.create({
+    dados_pessoais_exists.merge({
       nome,
       rg,
       cpf,
@@ -115,8 +101,14 @@ class CreateDadosPessoaisService {
       observacao,
     })
 
-    return dados_pessoais.id
+    try {
+      await dados_pessoais_exists.save()
+
+      return dados_pessoais_exists.id
+    } catch (error) {
+      throw new AppException(`Error ao atualizar informações: ${error}.`)
+    }
   }
 }
 
-export default new CreateDadosPessoaisService()
+export default new UpdateDadosPessoaisService()

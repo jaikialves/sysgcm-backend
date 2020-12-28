@@ -17,6 +17,7 @@ import {
 } from 'App/Models/Gcm/types/EnumTypes'
 import Gcm from 'App/Models/Gcm/Gcm'
 import User from 'App/Models/User/User'
+import { DateTime } from 'luxon'
 
 export default class AdminUserSeeder extends BaseSeeder {
   public async run() {
@@ -49,7 +50,7 @@ export default class AdminUserSeeder extends BaseSeeder {
       nome: 'Sebastião Ademar Gonçalves',
       rg: '377953611',
       cpf: '72042940682',
-      data_nascimento: new Date('08-13-1971'),
+      data_nascimento: DateTime.fromISO('1971-08-13'),
       nome_mae: 'José Gonçalves Rosa',
       nome_pai: 'Sebastiana Rosa dos Santos',
       telefone: ['15996962874', '15996601743'],
@@ -66,7 +67,7 @@ export default class AdminUserSeeder extends BaseSeeder {
       zona_eleitoral: '057',
       cnh: '02737170006',
       tipo_cnh: tipo_cnh.C,
-      validade_cnh: new Date('04-05-2020'),
+      validade_cnh: DateTime.fromISO('2020-07-21'),
       observacao: 'Esse é o ADMIN',
     })
 

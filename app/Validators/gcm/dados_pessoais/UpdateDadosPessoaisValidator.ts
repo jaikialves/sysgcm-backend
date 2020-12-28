@@ -10,46 +10,45 @@ import {
   tipo_sanguineo,
 } from 'App/Models/Gcm/types/EnumTypes'
 
-export default class CreateDadosPessoaisValidator {
+export default class UpdateDadosPessoaisValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    // -> dados pessoais
-    nome: schema.string({ escape: true }, [
+    nome: schema.string.optional({}, [
       rules.minLength(6),
       rules.maxLength(40),
       rules.alpha({ allow: ['space'] }),
-      rules.required(),
     ]),
     rg: schema.string.optional({ trim: true, escape: true }, [
       rules.minLength(9),
       rules.maxLength(11),
     ]),
-    cpf: schema.string({ trim: true, escape: true }, [
+    cpf: schema.string.optional({ trim: true, escape: true }, [
       rules.minLength(11),
       rules.maxLength(11),
-      rules.required(),
       rules.unique({ table: 'dados_pessoais', column: 'cpf' }),
     ]),
-    data_nascimento: schema.date({ format: 'yyyy-MM-dd' }, [rules.required()]),
-    nome_mae: schema.string({ escape: true }, [
-      rules.minLength(6),
-      rules.maxLength(40),
-      rules.required(),
-    ]),
+    data_nascimento: schema.date.optional({ format: 'yyyy-MM-dd' }, []),
+    nome_mae: schema.string.optional({ escape: true }, [rules.minLength(6), rules.maxLength(40)]),
     nome_pai: schema.string.optional({ escape: true }, [rules.minLength(6), rules.maxLength(40)]),
-    telefone: schema
-      .array([rules.minLength(1), rules.maxLength(10)])
-      .members(schema.string({ trim: true, escape: true }, [rules.required()])),
-    municipio_nascimento_id: schema.string({}, [rules.required(), rules.uuid()]),
-    sexo: schema.enum(Object.values(sexo), [rules.required()]),
-    cutis: schema.enum(Object.values(cutis), [rules.required()]),
+    telefone: schema.array
+      .optional([
+        rules.maxLength(10),
+        rules.unique({ table: 'dados_pessoais', column: 'telefone' }),
+      ])
+      .members(schema.string.optional({ trim: true, escape: true }, [])),
+    municipio_nascimento_id: schema.string.optional({}, [
+      rules.uuid(),
+      rules.exists({ table: 'municipios', column: 'id' }),
+    ]),
+    sexo: schema.enum.optional(Object.values(sexo), []),
+    cutis: schema.enum.optional(Object.values(cutis), []),
     tipo_sanguineo: schema.enum.optional(Object.values(tipo_sanguineo), []),
-    estado_civil: schema.enum(Object.values(estado_civil), []),
+    estado_civil: schema.enum.optional(Object.values(estado_civil), []),
     profissao: schema.array
       .optional([rules.maxLength(10)])
       .members(schema.string({ escape: true }, [rules.maxLength(4), rules.maxLength(20)])),
-    escolaridade: schema.enum(Object.values(escolaridade), []),
+    escolaridade: schema.enum.optional(Object.values(escolaridade), []),
     nome_conjuge: schema.string.optional({ escape: true }, [
       rules.requiredWhen('estado_civil', '=', 'CASADO'),
     ]),
@@ -76,16 +75,5 @@ export default class CreateDadosPessoaisValidator {
     observacao: schema.string.optional({ escape: true }, []),
   })
 
-  /**
-   * Custom messages for validation failures. You can make use of dot notation `(.)`
-   * for targeting nested fields and array expressions `(*)` for targeting all
-   * children of an array. For example:
-   *
-   * {
-   *   'profile.username.required': 'Username is required',
-   *   'scores.*.number': 'Define scores as valid numbers'
-   * }
-   *
-   */
   public messages = {}
 }

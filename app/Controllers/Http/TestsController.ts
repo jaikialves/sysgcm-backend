@@ -4,7 +4,7 @@ import Gcm from 'App/Models/Gcm/Gcm'
 export default class TestsController {
   public async index({ response }: HttpContextContract) {
     const gcm_test = await Gcm.query()
-      .where('id', '4ebe9bde-25a0-436b-a3d3-ce5c273ba96a')
+      .where('id', 'fb333883-2f65-49a1-8db7-379c2aa73e14')
       .preload('dados_pessoais')
       .preload('endereco', (query) => {
         query.preload('bairro', (query) => {

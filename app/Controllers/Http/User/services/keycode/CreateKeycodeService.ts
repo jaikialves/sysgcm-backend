@@ -10,7 +10,7 @@ class CreateKeycodeService {
     // -> check gcm exists
     const gcm_exists = await Gcm.findBy('id', gcm_id)
     if (!gcm_exists) {
-      throw new NotFoundException('❌  Error no cadastro: Gcm não encontrado. 😓')
+      throw new NotFoundException('Error no cadastro: Gcm não encontrado.')
     }
 
     const keycode = await Keycode.create({

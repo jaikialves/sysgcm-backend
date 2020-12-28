@@ -20,7 +20,7 @@ export default class EstadoSeeder extends BaseSeeder {
     }
 
     await Estado.createMany(XLSX.utils.sheet_to_json(file.Sheets[sheet[0]])).catch((err) => {
-      console.log(`❌   ${err.message}`)
+      console.log(`   ${err.message}`)
     })
   }
 }

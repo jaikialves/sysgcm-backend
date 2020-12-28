@@ -15,23 +15,23 @@ class CreateUserService {
   public async execute({ nome_usuario, email, password, keycode }: IRequestData) {
     const keycode_exists = await Keycode.findBy('keycode', keycode)
     if (!keycode_exists) {
-      throw new NotFoundException('❌  Erro ao criar usuário: chave de acesso não encontrada. 😓')
+      throw new NotFoundException('Erro ao criar usuário: chave de acesso não encontrada.')
     }
 
     // -> check keycode is valid
     if (!keycode_exists.active) {
-      throw new AppException('❌ Erro ao criar usuário: chave de acesso já utilizada. 😓')
+      throw new AppException('rro ao criar usuário: chave de acesso já utilizada.')
     }
 
     const gcm = await Gcm.findBy('id', keycode_exists.gcm_id)
     if (!gcm) {
-      throw new NotFoundException('❌  Erro ao criar usuário: Gcm não encontrado. 😓')
+      throw new NotFoundException('Erro ao criar usuário: Gcm não encontrado.')
     }
 
     try {
       await Keycode.query().where('id', keycode_exists.id).update({ active: false })
     } catch (error) {
-      throw new AppException('❌  Erro ao criar usuário. 😓')
+      throw new AppException('Erro ao criar usuário.')
     }
 
     const user = await User.create({
