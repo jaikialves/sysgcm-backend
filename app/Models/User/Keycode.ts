@@ -14,6 +14,9 @@ export default class Keycode extends BaseModel {
   public gcm_id: string
 
   @column()
+  public role: string
+
+  @column()
   public active: boolean
 
   @column.dateTime({ autoCreate: true, serializeAs: null })
@@ -22,10 +25,10 @@ export default class Keycode extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
 
-  /* ------------------------------------------------------------------------ */
+  /* ----------------------------- RELATIONSHIPS ----------------------------- */
 
   @belongsTo(() => User, { localKey: 'id', foreignKey: 'gcm_id' })
   public user: BelongsTo<typeof User>
 
-  /* ------------------------------------------------------------------------ */
+  /* --------------------------------- HOOKS --------------------------------- */
 }

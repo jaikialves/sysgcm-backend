@@ -1,8 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { AuthenticationException } from '@adonisjs/auth/build/standalone'
-import { roles } from 'App/Models/Gcm/types/EnumTypes'
 
-export default class Role {
+export default class Acl {
   public async handle(
     { auth }: HttpContextContract,
     next: () => Promise<void>,
@@ -13,9 +12,19 @@ export default class Role {
     }
 
     const user = await auth.authenticate()
+    await user.preload('roles')
+    const roles = user.roles.map((role) => {
+      return role.role
+    })
 
+    // -> check role
+    for (const roleName of allowed_roles) {
+      if (roles.includes(roleName)) {
+        await next()
+        return
+      }
+    }
 
-
-    await next()
+    throw new AuthenticationException('Usuário não permitindo', '401')
   }
 }

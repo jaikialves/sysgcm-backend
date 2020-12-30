@@ -16,6 +16,9 @@ export default class Keycodes extends BaseSchema {
         .notNullable()
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
+
+      table.string('role').notNullable().defaultTo('USER')
+
       table.boolean('active').defaultTo(true)
 
       table.timestamps(true)
