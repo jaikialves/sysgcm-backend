@@ -1,4 +1,4 @@
-# <p align = "center"> SYSGCM - Itararé </p>
+# <p align = "center"> SYSGCM </p>
 
 ### <p align = "center"> Aplicação focada em oferecer serviços os GCMs </p>
 
