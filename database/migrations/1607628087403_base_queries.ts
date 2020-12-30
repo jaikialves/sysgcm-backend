@@ -8,7 +8,6 @@ export default class BaseQueries extends BaseSchema {
     await this.db.rawQuery('SET TIMEZONE="America/Sao_Paulo";').knexQuery
 
     // create enum types
-    await this.db.rawQuery("CREATE TYPE roles AS ENUM ('ADMIN', 'MASTER', 'MEMBRO');").knexQuery
     await this.db.rawQuery("CREATE TYPE  sexo AS ENUM ('MASCULINO', 'FEMININO');").knexQuery
     await this.db.rawQuery(
       "CREATE TYPE cutis AS ENUM ('BRANCO', 'PRETO', 'PARDO', 'AMARELO', 'INDIGENA');"
@@ -32,7 +31,6 @@ export default class BaseQueries extends BaseSchema {
 
   public async down() {
     await this.db.rawQuery('DROP EXTENSION "uuid-ossp";').knexQuery
-    await this.db.rawQuery('DROP TYPE roles;').knexQuery
     await this.db.rawQuery('DROP TYPE sexo;').knexQuery
     await this.db.rawQuery('DROP TYPE cutis;').knexQuery
     await this.db.rawQuery('DROP TYPE tipo_sanguineo;').knexQuery

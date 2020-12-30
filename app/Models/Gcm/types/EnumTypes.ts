@@ -1,8 +1,3 @@
-export enum roles {
-  'ADMIN' = 'ADMIN',
-  'MASTER' = 'MASTER',
-}
-
 export enum sexo {
   'MASCULINO' = 'MASCULINO',
   'FEMININO' = 'FEMININO',

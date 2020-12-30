@@ -32,7 +32,7 @@ export default class Gcm extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
 
-  /* ------------------------------------------------------------------------ */
+  /* ----------------------------- RELATIONSHIPS ----------------------------- */
 
   @hasOne(() => DadosPessoais, { localKey: 'dados_pessoais_id', foreignKey: 'id' })
   public dados_pessoais: HasOne<typeof DadosPessoais>

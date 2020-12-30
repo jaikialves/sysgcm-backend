@@ -117,7 +117,7 @@ export default class GcmsController {
       bairro_id: gcm_exists.endereco.bairro_id,
       bairro: bairro_dto.bairro,
       codigo_bairro: bairro_dto.codigo_bairro,
-      observacao: bairro_dto.observacao,
+      observacao: bairro_dto.observacao_bairro,
       municipio_id: bairro_dto.municipio_id,
     })
 

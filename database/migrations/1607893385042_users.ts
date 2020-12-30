@@ -8,23 +8,25 @@ export default class Users extends BaseSchema {
       table.uuid('id').primary().defaultTo(this.db.rawQuery('uuid_generate_v4()').knexQuery)
 
       table.string('nome_usuario', 20).notNullable()
-      table.string('email', 100).nullable()
+      table.string('email', 100).notNullable()
       table.string('password').notNullable()
-      table
-        .enu('role', ['ADMIN', 'MASTER', 'MEMBRO'], {
-          useNative: true,
-          existingType: true,
-          enumName: 'roles',
-        })
-        .nullable()
-      table.string('avatar')
+      table.string('avatar').nullable()
       table
         .uuid('gcm_id')
         .references('id')
         .inTable('gcms')
+        .notNullable()
         .unique()
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
+      table
+        .uuid('role_id')
+        .references('id')
+        .inTable('roles')
+        .notNullable()
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE')
+
       table.string('remember_me_token').nullable()
       table.boolean('status').defaultTo(true)
 

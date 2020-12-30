@@ -36,7 +36,7 @@ export default class Municipio extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
 
-  /* ------------------------------------------------------------------------ */
+  /* ----------------------------- RELATIONSHIPS ----------------------------- */
 
   @hasMany(() => Bairro, { localKey: 'id', foreignKey: 'bairro_id' })
   public enderecos: HasMany<typeof Bairro>

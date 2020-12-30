@@ -7,7 +7,7 @@ export default class UpdateBairroValidator {
   public schema = schema.create({
     bairro: schema.string.optional({ escape: true }, []),
     codigo_bairro: schema.string.optional({ trim: true }, [rules.maxLength(6)]),
-    observacao: schema.string.optional({ escape: true }, []),
+    observacao_bairro: schema.string.optional({ escape: true }, []),
     municipio_id: schema.string.optional({}, [
       rules.uuid(),
       rules.exists({ table: 'municipios', column: 'id' }),

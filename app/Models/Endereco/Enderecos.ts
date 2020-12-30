@@ -22,6 +22,9 @@ export default class Endereco extends BaseModel {
   @column()
   public codigo_endereco: string
 
+  @column()
+  public observacao: string
+
   @column({ serializeAs: null })
   public bairro_id: string
 
@@ -31,7 +34,7 @@ export default class Endereco extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
 
-  /* ------------------------------------------------------------------------ */
+  /* ----------------------------- RELATIONSHIPS ----------------------------- */
 
   @belongsTo(() => Bairro, { localKey: 'id', foreignKey: 'bairro_id' })
   public bairro: BelongsTo<typeof Bairro>

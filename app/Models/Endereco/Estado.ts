@@ -24,7 +24,7 @@ export default class Estado extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
 
-  /* ------------------------------------------------------------------------ */
+  /* ----------------------------- RELATIONSHIPS ----------------------------- */
 
   @hasMany(() => Municipio, { localKey: 'id', foreignKey: 'estado_id' })
   public municipios: HasMany<typeof Municipio>

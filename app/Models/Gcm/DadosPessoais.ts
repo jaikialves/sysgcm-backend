@@ -97,7 +97,7 @@ export default class DadosPessoais extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
 
-  /* ------------------------------------------------------------------------ */
+  /* ----------------------------- RELATIONSHIPS ----------------------------- */
 
   @belongsTo(() => Gcm)
   public gcm: BelongsTo<typeof Gcm>
