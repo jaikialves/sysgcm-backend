@@ -3,20 +3,14 @@ import NotFoundException from 'App/Exceptions/NotFoundException'
 import Bairro from 'App/Models/Endereco/Bairro'
 
 interface IRequestData {
-  bairro: string
+  bairro?: string
   observacao?: string
   codigo_bairro?: string
-  municipio_id: string
+  municipio_id?: string
 }
 
 class CreateBairroService {
   public async execute({ bairro, observacao, codigo_bairro, municipio_id }: IRequestData) {
-    // -> find and check municipio exists
-    const check_municipio = await Municipio.findBy('id', municipio_id)
-    if (!check_municipio) {
-      throw new NotFoundException('Municipio não encontrado.')
-    }
-
     if (codigo_bairro) {
       const bairro_exists = await Bairro.findBy('codigo_bairro', codigo_bairro)
       if (!bairro_exists) {
@@ -25,6 +19,11 @@ class CreateBairroService {
 
       return bairro_exists.id
     } else {
+      const check_municipio = await Municipio.findBy('id', municipio_id)
+      if (!check_municipio) {
+        throw new NotFoundException('Municipio não encontrado.')
+      }
+
       const new_bairro = await Bairro.create({
         codigo_bairro,
         bairro,

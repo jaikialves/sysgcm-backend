@@ -53,6 +53,7 @@ export default class GcmsController {
     const bairro_dto = await request.validate(CreateBairroValidator)
     const endereco_dto = await request.validate(CreateEnderecoValidator)
     const gcm_dto = await request.validate(CreateGcmValidator)
+    const role_name = request.input('role_name')
 
     // -> create endereco
     const bairro_id = await CreateBairroService.execute(bairro_dto)
@@ -63,8 +64,6 @@ export default class GcmsController {
       cep: endereco_dto.cep,
       bairro_id: bairro_id,
     })
-
-    console.log(new Date(dados_pessoais_dto.data_nascimento.toISODate()))
 
     // -> create dados pessoais
     const dados_pessoais_id = await CreateDadosPessoaisService.execute(dados_pessoais_dto)
@@ -78,7 +77,7 @@ export default class GcmsController {
     })
 
     // -> create keycode
-    const keycode = await CreateKeycodeService.execute(gcm_id)
+    const keycode = await CreateKeycodeService.execute({ gcm_id, role_name })
 
     return response.json(keycode)
   }

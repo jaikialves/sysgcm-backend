@@ -3,6 +3,7 @@ import NotFoundException from 'App/Exceptions/NotFoundException'
 import Gcm from 'App/Models/Gcm/Gcm'
 import User from 'App/Models/User/User'
 import AppException from 'App/Exceptions/AppException'
+import Role from 'App/Models/User/Role'
 
 interface IRequestData {
   nome_usuario: string
@@ -20,7 +21,7 @@ class CreateUserService {
 
     // -> check keycode is valid
     if (!keycode_exists.active) {
-      throw new AppException('rro ao criar usuário: chave de acesso já utilizada.')
+      throw new AppException('Erro ao criar usuário: chave de acesso já utilizada.')
     }
 
     const gcm = await Gcm.findBy('id', keycode_exists.gcm_id)
@@ -31,17 +32,28 @@ class CreateUserService {
     try {
       await Keycode.query().where('id', keycode_exists.id).update({ active: false })
     } catch (error) {
-      throw new AppException('Erro ao criar usuário.')
+      throw new AppException('Erro ao criar usuário, tente novamente mais tarde.')
     }
 
-    const user = await User.create({
-      nome_usuario,
-      email,
-      password,
-      gcm_id: gcm.id,
-    })
+    const role_exists = await Role.findBy('name', keycode_exists.role_name)
+    if (!role_exists) {
+      throw new NotFoundException('Erro ao criar usuário: role não encontrada.')
+    }
 
-    return user.id
+    try {
+      const user = await User.create({
+        nome_usuario,
+        email,
+        password,
+        gcm_id: gcm.id,
+        role_id: role_exists.id,
+      })
+      await user.related('roles').attach([role_exists.id])
+
+      return user.id
+    } catch (error) {
+      throw new AppException('Erro ao criar usuário, tente novamente mais tarde.')
+    }
   }
 }
 

@@ -8,6 +8,7 @@ import {
   hasMany,
   HasOne,
   hasOne,
+  scope,
 } from '@ioc:Adonis/Lucid/Orm'
 
 import Estado from 'App/Models/Endereco/Estado'
@@ -46,4 +47,17 @@ export default class Municipio extends BaseModel {
 
   @hasOne(() => DadosPessoais, { localKey: 'id', foreignKey: 'municipio_nascimento_id' })
   public dados_pessoais: HasOne<typeof DadosPessoais>
+
+  /* --------------------------------- SCOPES --------------------------------- */
+
+  public static scopeSearchQuery = scope((query, search) => {
+    const search_fields = ['codigo_ibge', 'municipio', 'gentilico']
+    let str_return = ''
+
+    search_fields.forEach((element: string, index: number) => {
+      str_return = `${str_return} ${index !== 0 ? ' or ' : ' '} ${element} ilike '%${search}%'`
+    })
+
+    return query.whereRaw(`(${str_return})`)
+  })
 }

@@ -12,6 +12,9 @@ export default class CreateGcmValidator {
       rules.required(),
     ]),
     atribuicao: schema.enum(Object.values(atribuicao), [rules.required()]),
+    role_name: schema.string({ trim: true, escape: true }, [
+      rules.exists({ table: 'roles', column: 'name' }),
+    ]),
   })
 
   public messages = {}

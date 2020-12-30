@@ -18,7 +18,6 @@ export default class Enderecos extends BaseSchema {
         .references('id')
         .inTable('bairros')
         .notNullable()
-        .unique()
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
 

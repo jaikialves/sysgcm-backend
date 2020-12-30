@@ -14,7 +14,7 @@ export default class Keycode extends BaseModel {
   public gcm_id: string
 
   @column()
-  public role: string
+  public role_name: string
 
   @column()
   public active: boolean

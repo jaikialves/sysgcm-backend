@@ -17,7 +17,7 @@ export default class Keycodes extends BaseSchema {
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
 
-      table.string('role').notNullable().defaultTo('USER')
+      table.string('role_name').notNullable().defaultTo('USER')
 
       table.boolean('active').defaultTo(true)
 
