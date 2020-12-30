@@ -1,5 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { AuthenticationException } from '@adonisjs/auth/build/standalone'
+import AuthorizationException from 'App/Exceptions/AuthorizationException'
 
 export default class Acl {
   public async handle(
@@ -8,7 +8,7 @@ export default class Acl {
     allowed_roles: string[]
   ) {
     if (Array.isArray(allowed_roles) === false) {
-      throw new AuthenticationException('Usuário não permitindo', '401')
+      throw new AuthorizationException('Usuário não permitindo')
     }
 
     const user = await auth.authenticate()
@@ -25,6 +25,6 @@ export default class Acl {
       }
     }
 
-    throw new AuthenticationException('Usuário não permitindo', '401')
+    throw new AuthorizationException('Usuário não permitindo')
   }
 }

@@ -6,4 +6,6 @@ Route.group(() => {
   Route.post('create', 'Gcm/GcmsController.create').as('gcm.create')
   Route.put('update/:id', 'Gcm/GcmsController.update').as('gcm.update')
   Route.delete('delete/:id', 'Gcm/GcmsController.delete').as('gcm.delete')
-}).prefix('gcms')
+})
+  .prefix('gcms')
+  .middleware(['auth', 'acl:root,admin'])
