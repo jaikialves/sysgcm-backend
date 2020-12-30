@@ -58,6 +58,16 @@ export default class Municipio extends BaseModel {
       str_return = `${str_return} ${index !== 0 ? ' or ' : ' '} ${element} ilike '%${search}%'`
     })
 
+    console.log(`SRT -> ${str_return}`)
+
     return query.whereRaw(`(${str_return})`)
+  })
+
+  public static scopeSearchState = scope((query, state) => {
+    return state
+      ? query.whereRaw(
+          `estado_id = (select id from estados where sigla = '${state.toUpperCase()}')`
+        )
+      : null
   })
 }

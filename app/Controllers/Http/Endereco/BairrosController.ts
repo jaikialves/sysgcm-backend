@@ -11,7 +11,7 @@ export default class BairrosController {
 
   public async show() {}
 
-  public async create() {}
+  public async create({}: HttpContextContract) {}
 
   public async update() {}
 
