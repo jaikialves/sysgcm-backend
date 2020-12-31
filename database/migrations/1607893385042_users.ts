@@ -30,7 +30,7 @@ export default class Users extends BaseSchema {
       table.string('remember_me_token').nullable()
       table.boolean('status').defaultTo(true)
 
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

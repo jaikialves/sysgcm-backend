@@ -19,5 +19,8 @@ import './routes/enderecos.routes'
 // -> gcms
 import './routes/gcms.routes'
 
+// -> escalas
+import './routes/escalas.routes'
+
 // -> tests routes
 Route.get('test', 'TestsController.index')
