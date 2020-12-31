@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, hasOne, HasOne } from '@ioc:Adonis/Lucid/Orm'
+
 import Bairro from 'App/Models/Endereco/Bairro'
 import Gcm from '../Gcm/Gcm'
 
@@ -39,6 +40,6 @@ export default class Endereco extends BaseModel {
   @belongsTo(() => Bairro, { localKey: 'id', foreignKey: 'bairro_id' })
   public bairro: BelongsTo<typeof Bairro>
 
-  @belongsTo(() => Gcm)
-  public gcm: BelongsTo<typeof Gcm>
+  @hasOne(() => Gcm, { localKey: 'id', foreignKey: 'endereco_id' })
+  public gcm: HasOne<typeof Gcm>
 }

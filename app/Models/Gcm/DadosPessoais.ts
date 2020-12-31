@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, hasOne, HasOne } from '@ioc:Adonis/Lucid/Orm'
 
 import Gcm from './Gcm'
 import Municipio from 'App/Models/Endereco/Municipio'
@@ -99,8 +99,8 @@ export default class DadosPessoais extends BaseModel {
 
   /* ----------------------------- RELATIONSHIPS ----------------------------- */
 
-  @belongsTo(() => Gcm)
-  public gcm: BelongsTo<typeof Gcm>
+  @hasOne(() => Gcm, { localKey: 'id', foreignKey: 'dados_pessoais_id' })
+  public gcm: HasOne<typeof Gcm>
 
   @belongsTo(() => Municipio, { localKey: 'id', foreignKey: 'municipio_nascimento_id' })
   public municipio_nascimento: BelongsTo<typeof Municipio>

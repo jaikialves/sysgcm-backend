@@ -12,6 +12,9 @@ export default class Escala extends BaseModel {
   public data_fim: DateTime
 
   @column()
+  public gcm_id: string
+
+  @column()
   public observacao: string
 
   @column.dateTime({ autoCreate: true })

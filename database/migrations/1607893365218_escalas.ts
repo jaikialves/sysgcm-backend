@@ -9,6 +9,13 @@ export default class Escalas extends BaseSchema {
 
       table.dateTime('data_inicio', { useTz: true }).notNullable()
       table.dateTime('data_fim', { useTz: true }).notNullable()
+      table
+        .uuid('gcm_id')
+        .references('id')
+        .inTable('gcms')
+        .notNullable()
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE')
       table.text('observacao').nullable()
 
       table.timestamps(true)
