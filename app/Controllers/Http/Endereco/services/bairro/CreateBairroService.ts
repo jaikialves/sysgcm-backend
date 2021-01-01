@@ -6,7 +6,7 @@ interface IRequestData {
   bairro: string
   observacao: string
   codigo_bairro?: string
-  municipio_id: string
+  municipio_id?: string
 }
 
 class CreateBairroService {
@@ -14,24 +14,31 @@ class CreateBairroService {
     if (codigo_bairro) {
       const bairro_exists = await Bairro.findBy('codigo_bairro', codigo_bairro)
       if (!bairro_exists) {
+        const municipio_itarare = await Municipio.findBy('codigo_ibge', '3523206')
+        if (!municipio_itarare) {
+          throw new NotFoundException('Erro ao criar bairro: municipio itararé não encontrado.')
+        }
+
         return await CreateBairroService.createNewBairro({
           codigo_bairro,
           bairro,
           observacao,
-          municipio_id: await CreateBairroService.checkMunicipioExists(municipio_id),
+          municipio_id: municipio_itarare.id,
         })
       }
 
       return bairro_exists.id
     } else {
-      const new_bairro = await CreateBairroService.createNewBairro({
-        codigo_bairro,
-        bairro,
-        observacao,
-        municipio_id: await CreateBairroService.checkMunicipioExists(municipio_id),
-      })
+      if (municipio_id) {
+        const new_bairro = await CreateBairroService.createNewBairro({
+          codigo_bairro,
+          bairro,
+          observacao,
+          municipio_id: await CreateBairroService.checkMunicipioExists(municipio_id),
+        })
 
-      return new_bairro.id
+        return new_bairro.id
+      }
     }
   }
 

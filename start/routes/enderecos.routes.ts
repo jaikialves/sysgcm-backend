@@ -4,15 +4,15 @@ import Route from '@ioc:Adonis/Core/Route'
 Route.group(() => {
   Route.get('estados', 'Endereco/EstadosController.index').as('estado.index')
 })
-  .prefix('enderecos')
+  .prefix('estados')
   .middleware(['auth'])
 
 // -> municipios
 Route.group(() => {
-  Route.get('municipios', 'Endereco/MunicipiosController.index').as('municipio.index')
+  Route.get('index', 'Endereco/MunicipiosController.index').as('municipio.index')
 })
-  .prefix('enderecos')
-  .middleware('auth')
+  .prefix('municipios')
+  .middleware(['auth'])
 
 // -> bairros
 Route.group(() => {
@@ -20,4 +20,4 @@ Route.group(() => {
   Route.post('create', 'Endereco/BairrosController.create').as('bairro.create')
 })
   .prefix('bairros')
-  .middleware('auth')
+  .middleware(['auth'])
