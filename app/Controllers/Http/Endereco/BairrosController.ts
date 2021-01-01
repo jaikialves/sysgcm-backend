@@ -12,7 +12,7 @@ import DeleteBairroService from 'App/Controllers/Http/Endereco/services/bairro/D
 
 export default class BairrosController {
   //* -> INDEX
-  public async index({ request, response }: HttpContextContract) {
+  public async index({ request, response }: HttpContextContract): Promise<void> {
     const search = request.input('search', '')
 
     const municipio_itarare = await Municipio.findBy('codigo_ibge', '3523206')
@@ -33,7 +33,7 @@ export default class BairrosController {
   }
 
   //* -> CREATE
-  public async create({ request, response }: HttpContextContract) {
+  public async create({ request, response }: HttpContextContract): Promise<void> {
     const bairro_dto = await request.validate({
       schema: schema.create({
         codigo_bairro: schema.string({ trim: true }, [rules.maxLength(6)]),
@@ -48,7 +48,7 @@ export default class BairrosController {
   }
 
   //* -> UPDATE
-  public async update({ request, response }: HttpContextContract) {
+  public async update({ request, response }: HttpContextContract): Promise<void> {
     const { id } = request.params()
     const bairro_dto = await request.validate({
       schema: schema.create({
@@ -69,7 +69,7 @@ export default class BairrosController {
   }
 
   //* -> DELETE
-  public async delete({ request, response }: HttpContextContract) {
+  public async delete({ request, response }: HttpContextContract): Promise<void> {
     const { id } = request.params()
 
     await DeleteBairroService.execute(id)

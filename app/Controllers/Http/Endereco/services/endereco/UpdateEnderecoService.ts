@@ -21,7 +21,7 @@ class UpdateEnderecoService {
     cep,
     codigo_endereco,
     bairros_id,
-  }: IRequestData) {
+  }: IRequestData): Promise<string> {
     const endereco_exists = await Endereco.findBy('id', endereco_id)
     if (!endereco_exists) {
       throw new NotFoundException('Erro ao atualizar informações: endereço não encontrado.')

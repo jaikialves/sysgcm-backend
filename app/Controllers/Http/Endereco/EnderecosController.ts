@@ -5,7 +5,10 @@ export default class EnderecosController {
 
   public async show() {}
 
-  public async create({}: ) {}
+  //* -> CREATE
+  public async create({ request, response }: HttpContextContract): Promise<void> {
+    const endereco_dto = await request.validate()
+  }
 
   public async update() {}
 

@@ -18,7 +18,7 @@ class UpdateBairroService {
     codigo_bairro,
     observacao,
     municipio_id,
-  }: IRequestData) {
+  }: IRequestData): Promise<string> {
     const bairro_exists = await Bairro.findBy('id', bairro_id)
     if (!bairro_exists) {
       throw new NotFoundException('Erro ao atualizar informações: Bairro não encontrado.')
