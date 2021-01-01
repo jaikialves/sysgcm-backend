@@ -18,6 +18,8 @@ Route.group(() => {
 Route.group(() => {
   Route.get('index', 'Endereco/BairrosController.index').as('bairro.index')
   Route.post('create', 'Endereco/BairrosController.create').as('bairro.create')
+  Route.put('update/:id', 'Endereco/BairrosController.update').as('bairro.update')
+  Route.delete('delete/:id', 'Endereco/BairrosController.delete').as('bairro.delete')
 })
   .prefix('bairros')
   .middleware(['auth'])

@@ -9,7 +9,7 @@ export default class CreateBairroValidator {
       rules.maxLength(6),
       rules.exists({ table: 'bairros', column: 'codigo_bairro' }),
     ]),
-    bairro: schema.string({ escape: true }, [rules.requiredIfNotExists('codigo_bairro')]),
+    bairro: schema.string.optional({ escape: true }, [rules.requiredIfNotExists('codigo_bairro')]),
     observacao: schema.string.optional({ escape: true }, []),
     municipio_id: schema.string.optional({}, [
       rules.uuid(),

@@ -179,6 +179,6 @@ export default class GcmsController {
 
     await DeleteGcmService.execute(id)
 
-    return response.send('Gcm deletado com sucesso.')
+    return response.json('Gcm deletado com sucesso.')
   }
 }

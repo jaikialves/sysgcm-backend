@@ -1,14 +1,17 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { rules, schema } from '@ioc:Adonis/Core/Validator'
 
 import Bairro from 'App/Models/Endereco/Bairro'
 import Municipio from 'App/Models/Endereco/Municipio'
 
-import CreateBairroValidator from 'App/Validators/endereco/bairro/CreateBairroValidator'
-
 import NotFoundException from 'App/Exceptions/NotFoundException'
+
 import CreateBairroService from 'App/Controllers/Http/Endereco/services/bairro/CreateBairroService'
+import UpdateBairroService from 'App/Controllers/Http/Endereco/services/bairro/UpdateBairroService'
+import DeleteBairroService from 'App/Controllers/Http/Endereco/services/bairro/DeleteBairroService'
 
 export default class BairrosController {
+  //* -> INDEX
   public async index({ request, response }: HttpContextContract) {
     const search = request.input('search', '')
 
@@ -29,17 +32,48 @@ export default class BairrosController {
     return response.json(bairros)
   }
 
-  public async show() {}
-
+  //* -> CREATE
   public async create({ request, response }: HttpContextContract) {
-    const bairro_dto = await request.validate(CreateBairroValidator)
+    const bairro_dto = await request.validate({
+      schema: schema.create({
+        codigo_bairro: schema.string({ trim: true }, [rules.maxLength(6)]),
+        bairro: schema.string({ escape: true }, []),
+        observacao: schema.string.optional({ escape: true }, []),
+      }),
+    })
 
     const bairro = await CreateBairroService.execute(bairro_dto)
 
     return response.json(bairro)
   }
 
-  public async update() {}
+  //* -> UPDATE
+  public async update({ request, response }: HttpContextContract) {
+    const { id } = request.params()
+    const bairro_dto = await request.validate({
+      schema: schema.create({
+        codigo_bairro: schema.string({ trim: true }, [rules.maxLength(6)]),
+        bairro: schema.string({ escape: true }, []),
+        observacao: schema.string.optional({ escape: true }, []),
+      }),
+    })
 
-  public async delete() {}
+    const bairro = await UpdateBairroService.execute({
+      bairro_id: id,
+      bairro: bairro_dto.bairro,
+      codigo_bairro: bairro_dto.codigo_bairro,
+      observacao: bairro_dto.observacao,
+    })
+
+    return response.json(bairro)
+  }
+
+  //* -> DELETE
+  public async delete({ request, response }: HttpContextContract) {
+    const { id } = request.params()
+
+    await DeleteBairroService.execute(id)
+
+    response.json({ message: 'Bairro excluído com sucesso.' })
+  }
 }

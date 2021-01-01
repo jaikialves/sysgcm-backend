@@ -23,7 +23,7 @@ class CreateEnderecoService {
     // -> find and check bairro exist
     const bairro = await Bairro.findBy('id', bairro_id)
     if (!bairro) {
-      throw new NotFoundException('Bairro não encontrado.')
+      throw new NotFoundException('Erro ao criar endereço: bairro não encontrado.')
     }
 
     const endereco = await Endereco.create({
