@@ -21,7 +21,7 @@ import { DateTime } from 'luxon'
 export default class AdminSeeder extends BaseSeeder {
   public async run() {
     const endereco = await Endereco.create({
-      logradouro: 'RUA JOÃO PRADO MARGARIDO',
+      logradouro: 'Rua João Prado Margarido',
       numero: '249',
       complemento: '',
       cep: '18460000',
@@ -37,7 +37,7 @@ export default class AdminSeeder extends BaseSeeder {
       data_nascimento: DateTime.fromISO('1971-08-13'),
       nome_mae: 'José Gonçalves Rosa',
       nome_pai: 'Sebastiana Rosa dos Santos',
-      telefone: ['15996962874', '15996601743'],
+      telefone: ['15996962874', '1535314445'],
       municipio_nascimento_id: await Municipio.findBy('codigo_ibge', '3113503').then(
         (municipio) => {
           return municipio?.id
