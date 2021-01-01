@@ -9,11 +9,11 @@ export default class MunicipiosController {
     const state = request.input('state')
 
     const municipios = await Municipio.query()
-      .apply((scopes) => {
+      /* .apply((scopes) => {
         scopes.scopeSearchQuery(state)
-      })
+      })*/
       .apply((scopes) => {
-        scopes.scopeSearchQuery(search)
+        scopes.scopeSearchQuery(search, state)
       })
       .preload('estado')
       .orderBy('municipio', 'asc')

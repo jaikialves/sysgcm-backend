@@ -3,10 +3,10 @@ import NotFoundException from 'App/Exceptions/NotFoundException'
 import Bairro from 'App/Models/Endereco/Bairro'
 
 interface IRequestData {
-  bairro?: string
-  observacao?: string
+  bairro: string
+  observacao: string
   codigo_bairro?: string
-  municipio_id?: string
+  municipio_id: string
 }
 
 class CreateBairroService {
@@ -14,25 +14,48 @@ class CreateBairroService {
     if (codigo_bairro) {
       const bairro_exists = await Bairro.findBy('codigo_bairro', codigo_bairro)
       if (!bairro_exists) {
-        throw new NotFoundException('Codigo do bairro não encontrado.')
+        return await CreateBairroService.createNewBairro({
+          codigo_bairro,
+          bairro,
+          observacao,
+          municipio_id: await CreateBairroService.checkMunicipioExists(municipio_id),
+        })
       }
 
       return bairro_exists.id
     } else {
-      const check_municipio = await Municipio.findBy('id', municipio_id)
-      if (!check_municipio) {
-        throw new NotFoundException('Municipio não encontrado.')
-      }
-
-      const new_bairro = await Bairro.create({
+      const new_bairro = await CreateBairroService.createNewBairro({
         codigo_bairro,
         bairro,
         observacao,
-        municipio_id: check_municipio.id,
+        municipio_id: await CreateBairroService.checkMunicipioExists(municipio_id),
       })
 
       return new_bairro.id
     }
+  }
+
+  private static async createNewBairro({
+    bairro,
+    observacao,
+    codigo_bairro,
+    municipio_id,
+  }: IRequestData) {
+    return await Bairro.create({
+      codigo_bairro,
+      bairro,
+      observacao,
+      municipio_id,
+    })
+  }
+
+  private static async checkMunicipioExists(municipio_id: string) {
+    const municipio_exists = await Municipio.findBy('id', municipio_id)
+    if (!municipio_exists) {
+      throw new NotFoundException('Municipio não encontrado.')
+    }
+
+    return municipio_exists.id
   }
 }
 

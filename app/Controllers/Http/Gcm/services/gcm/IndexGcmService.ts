@@ -2,9 +2,12 @@ import Gcm from 'App/Models/Gcm/Gcm'
 import AppException from 'App/Exceptions/AppException'
 
 class IndexGcmService {
-  public async execute() {
+  public async execute(search: string) {
     try {
       return await Gcm.query()
+        .apply((scopes) => {
+          scopes.scopeSearchQuery(search)
+        })
         .where('status', true)
         .preload('dados_pessoais', (query) => {
           query.preload('municipio_nascimento')

@@ -50,7 +50,7 @@ export default class Municipio extends BaseModel {
 
   /* --------------------------------- SCOPES --------------------------------- */
 
-  public static scopeSearchQuery = scope((query, search) => {
+  public static scopeSearchQuery = scope((query, search, state) => {
     const search_fields = ['codigo_ibge', 'municipio', 'gentilico']
     let str_return = ''
 
@@ -58,16 +58,8 @@ export default class Municipio extends BaseModel {
       str_return = `${str_return} ${index !== 0 ? ' or ' : ' '} ${element} ilike '%${search}%'`
     })
 
-    console.log(`SRT -> ${str_return}`)
-
-    return query.whereRaw(`(${str_return})`)
-  })
-
-  public static scopeSearchState = scope((query, state) => {
-    return state
-      ? query.whereRaw(
-          `estado_id = (select id from estados where sigla = '${state.toUpperCase()}')`
-        )
-      : null
+    return query.whereRaw(
+      `(${str_return}) and estado_id = (select id from estados where sigla ilike '${state}')`
+    )
   })
 }

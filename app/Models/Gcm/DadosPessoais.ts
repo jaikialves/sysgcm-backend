@@ -1,5 +1,13 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column, hasOne, HasOne } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  belongsTo,
+  column,
+  hasOne,
+  HasOne,
+  scope,
+} from '@ioc:Adonis/Lucid/Orm'
 
 import Gcm from './Gcm'
 import Municipio from 'App/Models/Endereco/Municipio'
@@ -104,4 +112,17 @@ export default class DadosPessoais extends BaseModel {
 
   @belongsTo(() => Municipio, { localKey: 'id', foreignKey: 'municipio_nascimento_id' })
   public municipio_nascimento: BelongsTo<typeof Municipio>
+
+  /* --------------------------------- SCOPES --------------------------------- */
+
+  public static scopeSearchQuery = scope((query, search) => {
+    const search_fields = ['nome', 'rg', 'cpf', 'telefone', 'cnh', 'titulo_eleitor']
+    let str_return = ''
+
+    search_fields.forEach((element: string, index: number) => {
+      str_return = `${str_return} ${index !== 0 ? ' or ' : ' '} ${element} ilike '%${search}%'`
+    })
+
+    return query.whereRaw(`(${str_return})`)
+  })
 }

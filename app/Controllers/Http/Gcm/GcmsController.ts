@@ -10,8 +10,11 @@ import UpdateDadosPessoaisValidator from 'App/Validators/gcm/dados_pessoais/Upda
 import UpdateBairroValidator from 'App/Validators/endereco/bairro/UpdateBairroValidator'
 import UpdateEnderecoValidator from 'App/Validators/endereco/endereco/UpdateEnderecoValidator'
 import UpdateGcmValidator from 'App/Validators/gcm/gcm/UpdateGcmValidator'
+import Gcm from 'App/Models/Gcm/Gcm'
+import AppException from 'App/Exceptions/AppException'
+import NotFoundException from 'App/Exceptions/NotFoundException'
 
-import IndexGcmService from 'App/Controllers/Http/Gcm/services/gcm/IndexGcmService'
+import IndexGcmService from './services/gcm/IndexGcmService'
 import ShowGcmService from 'App/Controllers/Http/Gcm/services/gcm/ShowGcmService'
 import CreateBairroService from 'App/Controllers/Http/Endereco/services/bairro/CreateBairroService'
 import CreateEnderecoService from '../Endereco/services/endereco/CreateEnderecoService'
@@ -20,18 +23,16 @@ import CreateGcmService from 'App/Controllers/Http/Gcm/services/gcm/CreateGcmSer
 import CreateKeycodeService from 'App/Controllers/Http/User/services/keycode/CreateKeycodeService'
 import UpdateBairroService from 'App/Controllers/Http/Endereco/services/bairro/UpdateBairroService'
 import DeleteGcmService from 'App/Controllers/Http/Gcm/services/gcm/DeleteGcmService'
-
-import AppException from 'App/Exceptions/AppException'
-import NotFoundException from 'App/Exceptions/NotFoundException'
-import Gcm from 'App/Models/Gcm/Gcm'
 import UpdateEnderecoService from 'App/Controllers/Http/Endereco/services/endereco/UpdateEnderecoService'
 import UpdateDadosPessoaisService from 'App/Controllers/Http/Gcm/services/dados_pessoais/UpdateDadosPessoaisService'
 import UpdateGcmService from 'App/Controllers/Http/Gcm/services/gcm/UpdateGcmService'
 
 export default class GcmsController {
   //* -> INDEX
-  public async index({ response }: HttpContextContract) {
-    const gcms = await IndexGcmService.execute()
+  public async index({ request, response }: HttpContextContract) {
+    const search = request.input('search', '')
+
+    const gcms = await IndexGcmService.execute(search)
     return response.json(gcms)
   }
 
