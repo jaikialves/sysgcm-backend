@@ -1,78 +1,79 @@
 import Municipio from 'App/Models/Endereco/Municipio'
-import NotFoundException from 'App/Exceptions/NotFoundException'
 import Bairro from 'App/Models/Endereco/Bairro'
-import AppException from 'App/Exceptions/AppException'
 
-interface IRequestData {
+import AppException from 'App/Exceptions/AppException'
+import NotFoundException from 'App/Exceptions/NotFoundException'
+
+interface IRequestBairroData {
+  codigo_bairro: string
   bairro: string
   observacao?: string
+}
+
+interface IRequestGcmData {
+  municipio_itarare: boolean
   codigo_bairro?: string
+  bairro?: string
   municipio_id?: string
 }
 
 class CreateBairroService {
-  public async execute({
+  public async executeForBairro({
     bairro,
     observacao,
     codigo_bairro,
+  }: IRequestBairroData): Promise<string> {
+    const municipio_itarare_exists = await Municipio.findBy('codigo_ibge', '3523206')
+    if (!municipio_itarare_exists) {
+      throw new NotFoundException('Erro ao cadastrar informações: municipio não encontrado.')
+    }
+
+    try {
+      const new_bairro = await Bairro.create({
+        bairro,
+        codigo_bairro,
+        observacao,
+        municipio_id: municipio_itarare_exists.id,
+      })
+
+      return new_bairro.id
+    } catch (error) {
+      throw new AppException('Erro ao cadastrar informações, tente novamente mais tarde.')
+    }
+  }
+
+  public async executeForGcm({
+    municipio_itarare,
+    codigo_bairro,
+    bairro,
     municipio_id,
-  }: IRequestData): Promise<string> {
-    if (codigo_bairro) {
+  }: IRequestGcmData): Promise<string> {
+    if (municipio_itarare) {
       const bairro_exists = await Bairro.findBy('codigo_bairro', codigo_bairro)
       if (!bairro_exists) {
-        const municipio_itarare = await Municipio.findBy('codigo_ibge', '3523206')
-        if (!municipio_itarare) {
-          throw new NotFoundException('Erro ao criar bairro: municipio itararé não encontrado.')
-        }
-
-        const new_bairro = await CreateBairroService.createNewBairro({
-          codigo_bairro,
-          bairro,
-          observacao,
-          municipio_id: municipio_itarare.id,
-        })
-
-        return new_bairro.id
+        throw new NotFoundException('Erro ao cadastrar informações: bairro não encontrado.')
       }
 
       return bairro_exists.id
     }
 
-    const new_bairro = await CreateBairroService.createNewBairro({
-      codigo_bairro,
-      bairro,
-      observacao,
-      municipio_id: await CreateBairroService.checkMunicipioExists(municipio_id),
-    })
-
-    return new_bairro.id
-  }
-
-  private static async createNewBairro({
-    bairro,
-    observacao,
-    codigo_bairro,
-    municipio_id,
-  }: IRequestData): Promise<Bairro> {
-    return await Bairro.create({
-      codigo_bairro,
-      bairro,
-      observacao,
-      municipio_id,
-    })
-  }
-
-  private static async checkMunicipioExists(municipio_id?: string) {
-    if (!municipio_id) {
-      throw new AppException('O parâmetro municipio_id deve ser passado.')
+    if (municipio_id) {
+      const municipio_exists = await Municipio.findBy('id', municipio_id)
+      if (!municipio_exists) {
+        throw new NotFoundException('Erro ao cadastrar informações: municipio não encontrado.')
+      }
     }
 
-    const municipio_exists = await Municipio.findBy('id', municipio_id)
-    if (!municipio_exists) {
-      throw new NotFoundException('Municipio não encontrado.')
-    }
+    try {
+      const new_bairro = await Bairro.create({
+        bairro,
+        municipio_id,
+      })
 
-    return municipio_exists.id
+      return new_bairro.id
+    } catch (error) {
+      throw new AppException('Erro ao cadastrar informações, tente novamente mais tarde.')
+    }
   }
 }
 

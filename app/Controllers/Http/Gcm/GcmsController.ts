@@ -57,7 +57,7 @@ export default class GcmsController {
     const role_name = request.input('role_name')
 
     // -> create endereco
-    const bairro_id = await CreateBairroService.execute(bairro_dto)
+    const bairro_id = await CreateBairroService.executeForGcm(bairro_dto)
     const endereco_id = await CreateEnderecoService.execute({
       logradouro: endereco_dto.logradouro,
       numero: endereco_dto.numero,

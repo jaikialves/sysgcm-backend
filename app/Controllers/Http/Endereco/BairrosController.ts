@@ -42,7 +42,7 @@ export default class BairrosController {
       }),
     })
 
-    const bairro = await CreateBairroService.execute(bairro_dto)
+    const bairro = await CreateBairroService.executeForBairro(bairro_dto)
 
     return response.json(bairro)
   }
@@ -74,6 +74,6 @@ export default class BairrosController {
 
     await DeleteBairroService.execute(id)
 
-    response.json({ message: 'Bairro excluído com sucesso.' })
+    response.json('Bairro excluído com sucesso.')
   }
 }

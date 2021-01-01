@@ -1,4 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+
 import EscalaValidator from 'App/Validators/gcm/escala/EscalaValidator'
 import CreateEscalaService from 'App/Controllers/Http/Gcm/services/escala/CreateEscalaService'
 
