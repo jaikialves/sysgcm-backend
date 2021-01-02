@@ -3,12 +3,13 @@ import { rules, schema } from '@ioc:Adonis/Core/Validator'
 
 import Bairro from 'App/Models/Endereco/Bairro'
 import Municipio from 'App/Models/Endereco/Municipio'
-
-import NotFoundException from 'App/Exceptions/NotFoundException'
+import CreateNewBairroValidator from 'App/Validators/endereco/bairro/CreateNewBairroValidator'
 
 import CreateBairroService from 'App/Controllers/Http/Endereco/services/bairro/CreateBairroService'
 import UpdateBairroService from 'App/Controllers/Http/Endereco/services/bairro/UpdateBairroService'
 import DeleteBairroService from 'App/Controllers/Http/Endereco/services/bairro/DeleteBairroService'
+
+import NotFoundException from 'App/Exceptions/NotFoundException'
 
 export default class BairrosController {
   //* -> INDEX
@@ -34,13 +35,7 @@ export default class BairrosController {
 
   //* -> CREATE
   public async create({ request, response }: HttpContextContract): Promise<void> {
-    const bairro_dto = await request.validate({
-      schema: schema.create({
-        codigo_bairro: schema.string({ trim: true }, [rules.maxLength(6)]),
-        bairro: schema.string({ escape: true }, []),
-        observacao: schema.string.optional({ escape: true }, []),
-      }),
-    })
+    const bairro_dto = await request.validate(CreateNewBairroValidator)
 
     const bairro = await CreateBairroService.executeForBairro(bairro_dto)
 

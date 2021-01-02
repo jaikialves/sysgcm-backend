@@ -1,7 +1,7 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class CreateEnderecoValidator {
+export default class CreateGcmEnderecoValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
@@ -16,9 +16,6 @@ export default class CreateEnderecoValidator {
     ]),
     complemento: schema.string.optional({}, [rules.minLength(3), rules.maxLength(100)]),
     cep: schema.string({ trim: true }, [rules.minLength(8), rules.maxLength(8), rules.required()]),
-    codigo_endereco: schema.string.optional({}, [
-      rules.exists({ table: 'enderecos', column: 'codigo_endereco' }),
-    ]),
   })
 
   public messages = {}

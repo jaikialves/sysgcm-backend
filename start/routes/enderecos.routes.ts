@@ -23,3 +23,10 @@ Route.group(() => {
 })
   .prefix('bairros')
   .middleware(['auth'])
+
+// -> enderecos
+Route.group(() => {
+  Route.post('create', 'Endereco/EnderecosController.create').as('endereco.create')
+})
+  .prefix('endereco')
+  .middleware(['auth'])

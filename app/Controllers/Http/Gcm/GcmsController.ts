@@ -3,8 +3,6 @@ import validator from 'validator'
 import isUUID = validator.isUUID
 
 import CreateDadosPessoaisValidator from 'App/Validators/gcm/dados_pessoais/CreateDadosPessoaisValidator'
-import CreateBairroValidator from 'App/Validators/endereco/bairro/CreateBairroValidator'
-import CreateEnderecoValidator from 'App/Validators/endereco/endereco/CreateEnderecoValidator'
 import CreateGcmValidator from 'App/Validators/gcm/gcm/CreateGcmValidator'
 import UpdateDadosPessoaisValidator from 'App/Validators/gcm/dados_pessoais/UpdateDadosPessoaisValidator'
 import UpdateBairroValidator from 'App/Validators/endereco/bairro/UpdateBairroValidator'
@@ -26,6 +24,8 @@ import DeleteGcmService from 'App/Controllers/Http/Gcm/services/gcm/DeleteGcmSer
 import UpdateEnderecoService from 'App/Controllers/Http/Endereco/services/endereco/UpdateEnderecoService'
 import UpdateDadosPessoaisService from 'App/Controllers/Http/Gcm/services/dados_pessoais/UpdateDadosPessoaisService'
 import UpdateGcmService from 'App/Controllers/Http/Gcm/services/gcm/UpdateGcmService'
+import CreateGcmBairroValidator from 'App/Validators/endereco/bairro/CreateGcmBairroValidator'
+import CreateGcmEnderecoValidator from 'App/Validators/endereco/endereco/CreateGcmEnderecoValidator'
 
 export default class GcmsController {
   //* -> INDEX
@@ -51,14 +51,14 @@ export default class GcmsController {
   //* -> CREATE
   public async create({ request, response }: HttpContextContract) {
     const dados_pessoais_dto = await request.validate(CreateDadosPessoaisValidator)
-    const bairro_dto = await request.validate(CreateBairroValidator)
-    const endereco_dto = await request.validate(CreateEnderecoValidator)
+    const bairro_dto = await request.validate(CreateGcmBairroValidator)
+    const endereco_dto = await request.validate(CreateGcmEnderecoValidator)
     const gcm_dto = await request.validate(CreateGcmValidator)
     const role_name = request.input('role_name')
 
     // -> create endereco
     const bairro_id = await CreateBairroService.executeForGcm(bairro_dto)
-    const endereco_id = await CreateEnderecoService.execute({
+    const endereco_id = await CreateEnderecoService.executeForGcm({
       logradouro: endereco_dto.logradouro,
       numero: endereco_dto.numero,
       complemento: endereco_dto.complemento,

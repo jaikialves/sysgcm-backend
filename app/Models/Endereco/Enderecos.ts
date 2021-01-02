@@ -21,6 +21,9 @@ export default class Endereco extends BaseModel {
   public cep: string
 
   @column()
+  public nome_local: string
+
+  @column()
   public codigo_endereco: string
 
   @column()

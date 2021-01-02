@@ -11,6 +11,7 @@ export default class Enderecos extends BaseSchema {
       table.string('numero', 4).nullable()
       table.string('complemento', 100).nullable()
       table.string('cep', 8).notNullable()
+      table.string('nome_local', 40).nullable()
       table.string('codigo_endereco', 6).nullable()
       table.text('observacao').nullable()
       table

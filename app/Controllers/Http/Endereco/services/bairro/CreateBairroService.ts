@@ -3,6 +3,7 @@ import Bairro from 'App/Models/Endereco/Bairro'
 
 import AppException from 'App/Exceptions/AppException'
 import NotFoundException from 'App/Exceptions/NotFoundException'
+import ConflictException from 'App/Exceptions/ConflictException'
 
 interface IRequestBairroData {
   codigo_bairro: string
@@ -25,7 +26,12 @@ class CreateBairroService {
   }: IRequestBairroData): Promise<string> {
     const municipio_itarare_exists = await Municipio.findBy('codigo_ibge', '3523206')
     if (!municipio_itarare_exists) {
-      throw new NotFoundException('Erro ao cadastrar informações: municipio não encontrado.')
+      throw new NotFoundException('Erro ao cadastrar bairro: municipio não encontrado.')
+    }
+
+    const codigo_bairro_exists = await Bairro.findBy('codigo_bairro', codigo_bairro)
+    if (codigo_bairro_exists) {
+      throw new ConflictException('Erro ao cadastrar bairro: codigo do bairro já cadastrado.')
     }
 
     try {
@@ -51,7 +57,7 @@ class CreateBairroService {
     if (municipio_itarare) {
       const bairro_exists = await Bairro.findBy('codigo_bairro', codigo_bairro)
       if (!bairro_exists) {
-        throw new NotFoundException('Erro ao cadastrar informações: bairro não encontrado.')
+        throw new NotFoundException('Erro ao cadastrar gcm: bairro não encontrado.')
       }
 
       return bairro_exists.id
@@ -60,7 +66,7 @@ class CreateBairroService {
     if (municipio_id) {
       const municipio_exists = await Municipio.findBy('id', municipio_id)
       if (!municipio_exists) {
-        throw new NotFoundException('Erro ao cadastrar informações: municipio não encontrado.')
+        throw new NotFoundException('Erro ao cadastrar gcm: municipio não encontrado.')
       }
     }
 
@@ -72,7 +78,7 @@ class CreateBairroService {
 
       return new_bairro.id
     } catch (error) {
-      throw new AppException('Erro ao cadastrar informações, tente novamente mais tarde.')
+      throw new AppException('Erro ao cadastrar gcm, tente novamente mais tarde.')
     }
   }
 }
