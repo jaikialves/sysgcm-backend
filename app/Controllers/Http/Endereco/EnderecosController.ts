@@ -1,10 +1,25 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import validator from 'validator'
+import isUUID = validator.isUUID
+
 import CreateNewEnderecoValidator from 'App/Validators/endereco/endereco/CreateNewEnderecoValidator'
+import UpdateEnderecoValidator from 'App/Validators/endereco/endereco/UpdateEnderecoValidator'
+
+import IndexEnderecoService from 'App/Controllers/Http/Endereco/services/endereco/IndexEnderecoService'
 import CreateEnderecoService from 'App/Controllers/Http/Endereco/services/endereco/CreateEnderecoService'
+import UpdateEnderecoService from 'App/Controllers/Http/Endereco/services/endereco/UpdateEnderecoService'
+
+import AppException from 'App/Exceptions/AppException'
 
 export default class EnderecosController {
   //* -> INDEX
-  public async index({}: HttpContextContract): Promise<void> {}
+  public async index({ request, response }: HttpContextContract): Promise<void> {
+    const search = request.input('search', '')
+
+    const enderecos = await IndexEnderecoService.execute(search)
+
+    return response.json(enderecos)
+  }
 
   //* -> CREATE
   public async create({ request, response }: HttpContextContract): Promise<void> {
@@ -16,5 +31,25 @@ export default class EnderecosController {
   }
 
   //* -> UPDATE
-  public async update({}: HttpContextContract): Promise<void> {}
+  public async update({ request, response }: HttpContextContract): Promise<void> {
+    const { id } = request.params()
+    if (!isUUID(id, 4)) {
+      throw new AppException('Erro ao atualizar informações: parâmetro incorreto.')
+    }
+
+    const endereco_dto = await request.validate(UpdateEnderecoValidator)
+
+    const endereco_id = await UpdateEnderecoService.execute({
+      endereco_id: id,
+      logradouro: endereco_dto.logradouro,
+      numero: endereco_dto.numero,
+      complemento: endereco_dto.complemento,
+      cep: endereco_dto.cep,
+      nome_local: endereco_dto.nome_local,
+      codigo_endereco: endereco_dto.codigo_endereco,
+      bairros_id: endereco_dto.bairro_id,
+    })
+
+    return response.json(endereco_id)
+  }
 }

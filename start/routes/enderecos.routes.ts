@@ -26,7 +26,9 @@ Route.group(() => {
 
 // -> enderecos
 Route.group(() => {
+  Route.get('index', 'Endereco/EnderecosController.index').as('enderecos.index')
   Route.post('create', 'Endereco/EnderecosController.create').as('endereco.create')
+  Route.put('update/:id', 'Endereco/EnderecosController.update').as('endereco.update')
 })
-  .prefix('endereco')
+  .prefix('enderecos')
   .middleware(['auth'])

@@ -1,7 +1,8 @@
 import Bairro from 'App/Models/Endereco/Bairro'
+import Endereco from 'App/Models/Endereco/Enderecos'
+
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import AppException from 'App/Exceptions/AppException'
-import Endereco from 'App/Models/Endereco/Enderecos'
 
 class DeleteBairroService {
   public async execute(bairro_id: string): Promise<void> {

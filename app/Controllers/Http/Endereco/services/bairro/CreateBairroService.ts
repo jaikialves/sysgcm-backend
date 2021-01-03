@@ -44,7 +44,7 @@ class CreateBairroService {
 
       return new_bairro.id
     } catch (error) {
-      throw new AppException('Erro ao cadastrar informações, tente novamente mais tarde.')
+      throw new AppException('Erro ao cadastrar bairro, tente novamente mais tarde.')
     }
   }
 

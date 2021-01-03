@@ -1,34 +1,23 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
+import validator from 'validator'
+import isUUID = validator.isUUID
 
-import Bairro from 'App/Models/Endereco/Bairro'
-import Municipio from 'App/Models/Endereco/Municipio'
 import CreateNewBairroValidator from 'App/Validators/endereco/bairro/CreateNewBairroValidator'
 
+import IndexBairroService from 'App/Controllers/Http/Endereco/services/bairro/IndexBairroService'
 import CreateBairroService from 'App/Controllers/Http/Endereco/services/bairro/CreateBairroService'
 import UpdateBairroService from 'App/Controllers/Http/Endereco/services/bairro/UpdateBairroService'
 import DeleteBairroService from 'App/Controllers/Http/Endereco/services/bairro/DeleteBairroService'
 
-import NotFoundException from 'App/Exceptions/NotFoundException'
+import AppException from 'App/Exceptions/AppException'
 
 export default class BairrosController {
   //* -> INDEX
   public async index({ request, response }: HttpContextContract): Promise<void> {
     const search = request.input('search', '')
 
-    const municipio_itarare = await Municipio.findBy('codigo_ibge', '3523206')
-    if (!municipio_itarare) {
-      throw new NotFoundException('Erro ao lista bairros: municipio não encontrado.')
-    }
-
-    const bairros = await Bairro.query()
-      .apply((scopes) => {
-        scopes.scopeSearchQuery(search)
-      })
-      .where({
-        municipio_id: municipio_itarare.id,
-      })
-      .orderBy('codigo_bairro', 'asc')
+    const bairros = await IndexBairroService.execute(search)
 
     return response.json(bairros)
   }
@@ -45,6 +34,10 @@ export default class BairrosController {
   //* -> UPDATE
   public async update({ request, response }: HttpContextContract): Promise<void> {
     const { id } = request.params()
+    if (!isUUID(id, 4)) {
+      throw new AppException('Erro ao atualizar informações: parâmetro incorreto.')
+    }
+
     const bairro_dto = await request.validate({
       schema: schema.create({
         codigo_bairro: schema.string({ trim: true }, [rules.maxLength(6)]),
@@ -53,14 +46,14 @@ export default class BairrosController {
       }),
     })
 
-    const bairro = await UpdateBairroService.execute({
+    const bairro_id = await UpdateBairroService.executeForBairro({
       bairro_id: id,
       bairro: bairro_dto.bairro,
       codigo_bairro: bairro_dto.codigo_bairro,
       observacao: bairro_dto.observacao,
     })
 
-    return response.json(bairro)
+    return response.json(bairro_id)
   }
 
   //* -> DELETE

@@ -1,5 +1,13 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column, hasOne, HasOne } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  belongsTo,
+  column,
+  hasOne,
+  HasOne,
+  scope,
+} from '@ioc:Adonis/Lucid/Orm'
 
 import Bairro from 'App/Models/Endereco/Bairro'
 import Gcm from '../Gcm/Gcm'
@@ -45,4 +53,17 @@ export default class Endereco extends BaseModel {
 
   @hasOne(() => Gcm, { localKey: 'id', foreignKey: 'endereco_id' })
   public gcm: HasOne<typeof Gcm>
+
+  /* --------------------------------- SCOPES --------------------------------- */
+
+  public static scopeSearchQuery = scope((query, search) => {
+    const search_fields = ['logradouro', 'numero', 'cep', 'nome_local', 'codigo_endereco']
+    let str_return = ''
+
+    search_fields.forEach((element: string, index: number) => {
+      str_return = `${str_return} ${index !== 0 ? ' or ' : ' '} ${element} ilike '%${search}%'`
+    })
+
+    return query.whereRaw(`(${str_return})`)
+  })
 }

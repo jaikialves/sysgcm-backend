@@ -1,30 +1,38 @@
 import Bairro from 'App/Models/Endereco/Bairro'
+
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import AppException from 'App/Exceptions/AppException'
 import ConflictException from 'App/Exceptions/ConflictException'
+import Municipio from 'App/Models/Endereco/Municipio'
 
-interface IRequestData {
+interface IRequestBairroData {
   bairro_id: string
   bairro?: string
   codigo_bairro?: string
   observacao?: string
+}
+
+interface IRequestGcmData {
+  bairro_id: string
+  bairro?: string
+  codigo_bairro?: string
   municipio_id?: string
 }
 
 class UpdateBairroService {
-  public async execute({
+  public async executeForBairro({
     bairro_id,
     bairro,
     codigo_bairro,
     observacao,
-    municipio_id,
-  }: IRequestData): Promise<string> {
+  }: IRequestBairroData): Promise<string> {
+    // -> check bairro exists
     const bairro_exists = await Bairro.findBy('id', bairro_id)
     if (!bairro_exists) {
-      throw new NotFoundException('Erro ao atualizar informações: Bairro não encontrado.')
+      throw new NotFoundException('Erro ao atualizar informações: bairro não encontrado.')
     }
 
-    // -> check codigo_bairros exists
+    // -> check codigo_bairro exists
     if (codigo_bairro) {
       const codigo_bairro_exists = await Bairro.findBy('codigo_bairro', codigo_bairro)
       if (codigo_bairro_exists) {
@@ -36,6 +44,48 @@ class UpdateBairroService {
       bairro,
       codigo_bairro,
       observacao,
+    })
+
+    try {
+      await bairro_exists.save()
+
+      return bairro_exists.id
+    } catch (error) {
+      throw new AppException(`Erro ao atualizar informações, tente novamente mais tarde.`)
+    }
+  }
+
+  public async executeForGcm({
+    bairro_id,
+    bairro,
+    codigo_bairro,
+    municipio_id,
+  }: IRequestGcmData): Promise<string> {
+    const bairro_exists = await Bairro.findBy('id', bairro_id)
+    if (!bairro_exists) {
+      throw new NotFoundException('Erro ao atualizar dados do gcm: bairro não encontrado.')
+    }
+
+    // -> return bairro_id
+    if (codigo_bairro) {
+      const bairro_exists = await Bairro.findBy('codigo_bairro', codigo_bairro)
+      if (!bairro_exists) {
+        throw new NotFoundException('Erro ao atualizar dados do gcm: bairro não encontrado.')
+      }
+
+      return bairro_exists.id
+    }
+
+    // -> check municipio exists
+    if (municipio_id) {
+      const municipio_exists = await Municipio.findBy('id', municipio_id)
+      if (!municipio_exists) {
+        throw new NotFoundException('Erro ao atualizar dados do gcm: município não encontrado.')
+      }
+    }
+
+    bairro_exists.merge({
+      bairro,
       municipio_id,
     })
 
@@ -44,7 +94,7 @@ class UpdateBairroService {
 
       return bairro_exists.id
     } catch (error) {
-      throw new AppException(`Erro ao atualizar informações: ${error}.`)
+      throw new AppException('Erro ao atualizar dados do gcm, tente novamente mais tarde.')
     }
   }
 }

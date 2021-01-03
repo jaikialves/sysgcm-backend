@@ -1,25 +1,32 @@
 import Endereco from 'App/Models/Endereco/Enderecos'
+import Bairro from 'App/Models/Endereco/Bairro'
+
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import ConflictException from 'App/Exceptions/ConflictException'
-import Bairro from 'App/Models/Endereco/Bairro'
 import AppException from 'App/Exceptions/AppException'
 
 interface IRequestData {
   endereco_id: string
   logradouro?: string
+  numero?: string
   complemento?: string
   cep?: string
+  nome_local?: string
   codigo_endereco?: string
-  bairros_id: string
+  observacao?: string
+  bairros_id?: string
 }
 
 class UpdateEnderecoService {
   public async execute({
     endereco_id,
     logradouro,
+    numero,
     complemento,
     cep,
+    nome_local,
     codigo_endereco,
+    observacao,
     bairros_id,
   }: IRequestData): Promise<string> {
     const endereco_exists = await Endereco.findBy('id', endereco_id)
@@ -31,7 +38,7 @@ class UpdateEnderecoService {
       const codigo_endereco_exists = await Endereco.findBy('codigo_endereco', codigo_endereco)
       if (codigo_endereco_exists) {
         throw new ConflictException(
-          'Erro ao atualizar informações: codigo do endereço já existente.'
+          'Erro ao atualizar informações: codigo do endereço já cadastrado.'
         )
       }
     }
@@ -41,14 +48,23 @@ class UpdateEnderecoService {
       throw new NotFoundException('Erro ao atualizar informações: bairro não encontrado.')
     }
 
-    endereco_exists.merge({ logradouro, complemento, cep, codigo_endereco, bairro_id: bairro.id })
+    endereco_exists.merge({
+      logradouro,
+      numero,
+      complemento,
+      cep,
+      nome_local,
+      codigo_endereco,
+      observacao,
+      bairro_id: bairro.id,
+    })
 
     try {
       await endereco_exists.save()
 
       return endereco_exists.id
     } catch (error) {
-      throw new AppException(`Erro ao atualizar informações: ${error}.`)
+      throw new AppException(`Erro ao atualizar informações, tente novamente mais tarde.`)
     }
   }
 }

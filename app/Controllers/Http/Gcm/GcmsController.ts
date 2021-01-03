@@ -2,15 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import validator from 'validator'
 import isUUID = validator.isUUID
 
-import CreateDadosPessoaisValidator from 'App/Validators/gcm/dados_pessoais/CreateDadosPessoaisValidator'
-import CreateGcmValidator from 'App/Validators/gcm/gcm/CreateGcmValidator'
-import UpdateDadosPessoaisValidator from 'App/Validators/gcm/dados_pessoais/UpdateDadosPessoaisValidator'
-import UpdateBairroValidator from 'App/Validators/endereco/bairro/UpdateBairroValidator'
-import UpdateEnderecoValidator from 'App/Validators/endereco/endereco/UpdateEnderecoValidator'
-import UpdateGcmValidator from 'App/Validators/gcm/gcm/UpdateGcmValidator'
 import Gcm from 'App/Models/Gcm/Gcm'
-import AppException from 'App/Exceptions/AppException'
-import NotFoundException from 'App/Exceptions/NotFoundException'
 
 import IndexGcmService from './services/gcm/IndexGcmService'
 import ShowGcmService from 'App/Controllers/Http/Gcm/services/gcm/ShowGcmService'
@@ -20,12 +12,22 @@ import CreateDadosPessoaisService from './services/dados_pessoais/CreateDadosPes
 import CreateGcmService from 'App/Controllers/Http/Gcm/services/gcm/CreateGcmService'
 import CreateKeycodeService from 'App/Controllers/Http/User/services/keycode/CreateKeycodeService'
 import UpdateBairroService from 'App/Controllers/Http/Endereco/services/bairro/UpdateBairroService'
-import DeleteGcmService from 'App/Controllers/Http/Gcm/services/gcm/DeleteGcmService'
 import UpdateEnderecoService from 'App/Controllers/Http/Endereco/services/endereco/UpdateEnderecoService'
 import UpdateDadosPessoaisService from 'App/Controllers/Http/Gcm/services/dados_pessoais/UpdateDadosPessoaisService'
 import UpdateGcmService from 'App/Controllers/Http/Gcm/services/gcm/UpdateGcmService'
+import DeleteGcmService from 'App/Controllers/Http/Gcm/services/gcm/DeleteGcmService'
+
 import CreateGcmBairroValidator from 'App/Validators/endereco/bairro/CreateGcmBairroValidator'
 import CreateGcmEnderecoValidator from 'App/Validators/endereco/endereco/CreateGcmEnderecoValidator'
+import CreateDadosPessoaisValidator from 'App/Validators/gcm/dados_pessoais/CreateDadosPessoaisValidator'
+import CreateGcmValidator from 'App/Validators/gcm/gcm/CreateGcmValidator'
+import UpdateDadosPessoaisValidator from 'App/Validators/gcm/dados_pessoais/UpdateDadosPessoaisValidator'
+import UpdateEnderecoValidator from 'App/Validators/endereco/endereco/UpdateEnderecoValidator'
+import UpdateGcmValidator from 'App/Validators/gcm/gcm/UpdateGcmValidator'
+
+import AppException from 'App/Exceptions/AppException'
+import NotFoundException from 'App/Exceptions/NotFoundException'
+import UpdateGcmBairroValidator from 'App/Validators/endereco/bairro/UpdateGcmBairroValidator'
 
 export default class GcmsController {
   //* -> INDEX
@@ -107,20 +109,20 @@ export default class GcmsController {
       throw new NotFoundException('Erro ao atualizar informações: gcm não encontrado.')
     }
 
-    const bairro_dto = await request.validate(UpdateBairroValidator)
+    const bairro_dto = await request.validate(UpdateGcmBairroValidator)
     const endereco_dto = await request.validate(UpdateEnderecoValidator)
     const dados_pessoais_dto = await request.validate(UpdateDadosPessoaisValidator)
     const gcm_dto = await request.validate(UpdateGcmValidator)
 
-    // -> update endereco
-    const bairro_id = await UpdateBairroService.execute({
+    // -> update bairro
+    const bairro_id = await UpdateBairroService.executeForGcm({
       bairro_id: gcm_exists.endereco.bairro_id,
       bairro: bairro_dto.bairro,
       codigo_bairro: bairro_dto.codigo_bairro,
-      observacao: bairro_dto.observacao_bairro,
       municipio_id: bairro_dto.municipio_id,
     })
 
+    // -> update endereco
     const endereco_id = await UpdateEnderecoService.execute({
       endereco_id: gcm_exists.endereco_id,
       logradouro: endereco_dto.logradouro,
