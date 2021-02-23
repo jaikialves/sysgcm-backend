@@ -4,8 +4,8 @@ import fs from 'fs'
 import Database from '@ioc:Adonis/Lucid/Database'
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 
-import Estado from 'App/Models/Endereco/Estado'
-import Municipio from 'App/Models/Endereco/Municipio'
+import Estado from 'App/Modules/Endereco/Models/Estado'
+import Municipio from 'App/Modules/Endereco/Models/Municipio'
 
 export default class MunicipiosSeeder extends BaseSeeder {
   public async run() {

@@ -7,20 +7,23 @@ Route.get('/', async () => {
 //? -> PUBLIC
 
 Route.group(() => {
-  Route.post('/login', 'AuthController.login').as('auth.login')
-  Route.post('/register', 'User/UsersController.create').as('user.create')
+  Route.post('/login', '/App/Modules/User/Controllers/AuthController.login').as('auth.login')
+  Route.post('/register', '/App/Modules/User/UsersController.create').as('user.create')
 })
 
 //? -> PRIVATE
 
 // -> enderecos
-import './routes/enderecos.routes'
+import 'App/Modules/Endereco/Routes/enderecos.routes'
 
 // -> gcms
-import './routes/gcms.routes'
+import 'App/Modules/Gcm/Routes/gcms.routes'
 
 // -> escalas
-import './routes/escalas.routes'
+import 'App/Modules/Gcm/Routes/escalas.routes'
+
+// -> users
+import 'App/Modules/User/Routes/users.routes'
 
 // -> tests routes
 Route.get('test', 'TestsController.index')

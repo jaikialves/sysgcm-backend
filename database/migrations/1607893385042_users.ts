@@ -29,6 +29,7 @@ export default class Users extends BaseSchema {
 
       table.string('remember_me_token').nullable()
       table.boolean('status').defaultTo(true)
+      table.boolean('is_deleted').defaultTo(false)
 
       table.timestamps(true, true)
     })

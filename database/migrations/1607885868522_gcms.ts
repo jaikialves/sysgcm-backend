@@ -8,6 +8,7 @@ export default class Gcms extends BaseSchema {
       table.uuid('id').primary().defaultTo(this.db.rawQuery('uuid_generate_v4()').knexQuery)
 
       table.string('nome_guerra', 20).notNullable()
+
       table
         .uuid('dados_pessoais_id')
         .references('id')
@@ -29,8 +30,11 @@ export default class Gcms extends BaseSchema {
           { useNative: true, existingType: true, enumName: 'atribuicao' }
         )
         .notNullable()
+
       table.text('historico').nullable()
+
       table.boolean('status').defaultTo(true)
+      table.boolean('is_deleted').defaultTo(false)
 
       table.timestamps(true)
     })

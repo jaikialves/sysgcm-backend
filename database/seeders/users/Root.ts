@@ -1,12 +1,12 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 
-import Endereco from 'App/Models/Endereco/Enderecos'
-import Bairro from 'App/Models/Endereco/Bairro'
-import Municipio from 'App/Models/Endereco/Municipio'
-import DadosPessoais from 'App/Models/Gcm/DadosPessoais'
-import Gcm from 'App/Models/Gcm/Gcm'
-import User from 'App/Models/User/User'
-import Role from 'App/Models/User/Role'
+import Endereco from 'App/Modules/Endereco/Models/Enderecos'
+import Bairro from 'App/Modules/Endereco/Models/Bairro'
+import Municipio from 'App/Modules/Endereco/Models/Municipio'
+import DadosPessoais from 'App/Modules/Gcm/Models/DadosPessoais'
+import Gcm from 'App/Modules/Gcm/Models/Gcm'
+import User from 'App/Modules/User/Models/User'
+import Role from 'App/Modules/User/Models/Role'
 import { DateTime } from 'luxon'
 import {
   atribuicao,
@@ -15,7 +15,7 @@ import {
   estado_civil,
   sexo,
   tipo_sanguineo,
-} from 'App/Models/Gcm/types/EnumTypes'
+} from 'App/Modules/Gcm/Models/types/EnumTypes'
 
 export default class RootSeeder extends BaseSeeder {
   public async run() {

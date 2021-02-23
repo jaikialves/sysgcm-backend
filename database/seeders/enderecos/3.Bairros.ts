@@ -2,8 +2,8 @@ import XLSX from 'xlsx'
 
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 
-import Bairro from 'App/Models/Endereco/Bairro'
-import Municipio from 'App/Models/Endereco/Municipio'
+import Bairro from 'App/Modules/Endereco/Models/Bairro'
+import Municipio from 'App/Modules/Endereco/Models/Municipio'
 
 export default class BairrosSeeder extends BaseSeeder {
   public async run() {

@@ -1,7 +1,7 @@
 import XLSX from 'xlsx'
 
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
-import Estado from 'App/Models/Endereco/Estado'
+import Estado from 'App/Modules/Endereco/Models/Estado'
 
 export default class EstadoSeeder extends BaseSeeder {
   public async run() {
