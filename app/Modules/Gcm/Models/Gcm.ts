@@ -1,5 +1,15 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, BelongsTo, column, scope } from '@ioc:Adonis/Lucid/Orm'
+import {
+  afterFind,
+  BaseModel,
+  beforeFind,
+  belongsTo,
+  BelongsTo,
+  column,
+  ModelQueryBuilderContract,
+  scope,
+} from '@ioc:Adonis/Lucid/Orm'
+
 import { atribuicao } from './types/EnumTypes'
 
 import DadosPessoais from './DadosPessoais'
@@ -49,6 +59,17 @@ export default class Gcm extends BaseModel {
   public user: BelongsTo<typeof User>
 
   /* --------------------------------- HOOKS --------------------------------- */
+
+  @beforeFind()
+  public static async ignoreDeleted(query: ModelQueryBuilderContract<typeof Gcm>): Promise<void> {
+    query.whereNot('is_deleted', true)
+  }
+
+  @afterFind()
+  public static async preload(gcm: Gcm): Promise<void> {
+    await gcm.preload('dados_pessoais')
+    await gcm.preload('endereco')
+  }
 
   /* --------------------------------- SCOPES --------------------------------- */
 

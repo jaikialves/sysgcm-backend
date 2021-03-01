@@ -1,7 +1,12 @@
-import IKeycodesRepository from 'App/Modules/User/Interfaces/IKeycodesRepository'
 import Keycode from 'App/Modules/User/Models/Keycode'
+import ICreateKeycodeDTO from 'App/Modules/User/DTOs/ICreateKeycodeDTO'
+import { IKeycodesRepository } from 'App/Modules/User/Interfaces'
 
-export default class KeycodesRepository implements IKeycodesRepository {
+export class KeycodesRepository implements IKeycodesRepository {
+  public async create(data: ICreateKeycodeDTO): Promise<Keycode> {
+    return await Keycode.create(data)
+  }
+
   public async findByKeycode(keycode: string): Promise<Keycode | null> {
     return await Keycode.findBy('keycode', keycode)
   }

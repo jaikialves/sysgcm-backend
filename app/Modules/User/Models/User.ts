@@ -1,14 +1,14 @@
 import { DateTime } from 'luxon'
 import {
-  afterFetch,
+  afterCreate,
   BaseModel,
   beforeFind,
   beforeSave,
   column,
-  HasOne,
   hasOne,
-  ManyToMany,
   manyToMany,
+  HasOne,
+  ManyToMany,
   ModelQueryBuilderContract,
 } from '@ioc:Adonis/Lucid/Orm'
 
@@ -96,8 +96,13 @@ export default class User extends BaseModel {
     }
   }
 
+  @afterCreate()
+  public static async attachRole(user: User): Promise<void> {
+    await user.related('roles').attach([user.role_id])
+  }
+  /*
   @afterFetch()
   public static async preload(user: User): Promise<void> {
     //await user.preload('gcm')
-  }
+  }*/
 }

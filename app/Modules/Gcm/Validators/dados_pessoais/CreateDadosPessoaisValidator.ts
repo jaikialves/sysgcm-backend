@@ -10,7 +10,7 @@ import {
   tipo_sanguineo,
 } from 'App/Modules/Gcm/Models/types/EnumTypes'
 
-export default class CreateDadosPessoaisValidator {
+export class CreateDadosPessoaisValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({

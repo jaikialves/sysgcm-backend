@@ -1,22 +1,26 @@
-import Gcm from 'App/Modules/Gcm/Models/Gcm'
-import NotFoundException from 'App/Shared/Exceptions/NotFoundException'
-import AppException from 'App/Shared/Exceptions/AppException'
+import { inject, injectable } from 'tsyringe'
 
-class DeleteGcmService {
+import { IGcmsRepository } from 'App/Modules/Gcm/Interfaces'
+
+import AppException from 'App/Shared/Exceptions/AppException'
+import NotFoundException from 'App/Shared/Exceptions/NotFoundException'
+
+injectable()
+export class DeleteGcmService {
+  constructor(
+    @inject('GcmsRepository')
+    private gcmsRepository: IGcmsRepository
+  ) {}
+
   public async execute(gcm_id: string) {
-    const gcm_exists = await Gcm.query().where('id', gcm_id).where('status', true).first()
+    const gcm_exists = await this.gcmsRepository.findById(gcm_id)
     if (!gcm_exists) {
       throw new NotFoundException('Erro ao deletar: gcm não encontrado.')
     }
-
-    gcm_exists.is_deleted = false
-
     try {
-      await gcm_exists.save()
+      await this.gcmsRepository.delete(gcm_exists)
     } catch (error) {
       throw new AppException('Erro ao deletar gcm, tente novamente mais tarde.')
     }
   }
 }
-
-export default new DeleteGcmService()

@@ -1,20 +1,40 @@
 import { container } from 'tsyringe'
 
-import IGcmsRepository from 'App/Modules/Gcm/Interfaces/IGcmsRepository'
-import GcmsRepository from 'App/Modules/Gcm/Repositories/GcmsRepository'
+import {
+  IGcmsRepository,
+  IEscalaRepository,
+  IDadosPessoaisRepository,
+} from 'App/Modules/Gcm/Interfaces'
 
-import IUsersRepository from 'App/Modules/User/Interfaces/IUsersRepository'
-import UsersRepository from 'App/Modules/User/Repositories/UsersRepository'
+import {
+  DadosPessoaisRepository,
+  EscalaRepository,
+  GcmsRepository,
+} from 'App/Modules/Gcm/Repositories'
 
-import IKeycodesRepository from 'App/Modules/User/Interfaces/IKeycodesRepository'
-import KeycodesRepository from 'App/Modules/User/Repositories/KeycodesRepository'
+import { IEnderecosRepository } from 'App/Modules/Endereco/Interfaces'
+import { EnderecosRepository } from 'App/Modules/Endereco/Repositories'
 
-import IRolesRepository from 'App/Modules/User/Interfaces/IRolesRepository'
-import RolesRepository from 'App/Modules/User/Repositories/RolesRepository'
+import {
+  IUsersRepository,
+  IKeycodesRepository,
+  IRolesRepository,
+} from 'App/Modules/User/Interfaces'
+import { UsersRepository, RolesRepository, KeycodesRepository } from 'App/Modules/User/Repositories'
 
 /* -------------------------------- Singleton --------------------------------*/
 
+// user
 container.registerSingleton<IUsersRepository>('UsersRepository', UsersRepository)
-container.registerSingleton<IKeycodesRepository>('UsersRepository', KeycodesRepository)
-container.registerSingleton<IGcmsRepository>('GcmsRepository', GcmsRepository)
+container.registerSingleton<IKeycodesRepository>('KeycodesRepository', KeycodesRepository)
 container.registerSingleton<IRolesRepository>('RolesRepository', RolesRepository)
+
+// gcm
+container.registerSingleton<IDadosPessoaisRepository>(
+  'DadosPessoaisRepository',
+  DadosPessoaisRepository
+)
+container.registerSingleton<IEscalaRepository>('EscalaRepository', EscalaRepository)
+container.registerSingleton<IGcmsRepository>('GcmsRepository', GcmsRepository)
+
+container.registerSingleton<IEnderecosRepository>('EnderecosRepository', EnderecosRepository)

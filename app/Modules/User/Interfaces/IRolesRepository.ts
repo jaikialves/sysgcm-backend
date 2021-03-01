@@ -1,5 +1,5 @@
 import Role from 'App/Modules/User/Models/Role'
 
-export default interface IRolesRepository {
+export interface IRolesRepository {
   findByName(role_name: string): Promise<Role | null>
 }

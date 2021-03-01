@@ -1,7 +1,10 @@
+import { container } from 'tsyringe'
 import { schema } from '@ioc:Adonis/Core/Validator'
+
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { ShowUserService } from 'App/Modules/User/Services/user/ShowUserService'
+
 import AppException from 'App/Shared/Exceptions/AppException'
-import ShowUserService from 'App/Modules/User/Services/user/ShowUserService'
 
 export default class AuthController {
   public async login({ request, response, auth }: HttpContextContract) {
@@ -23,7 +26,8 @@ export default class AuthController {
         return new AppException('Não foi possível fazer o login, tente mais tarte.')
       }
 
-      const user = await ShowUserService.execute(auth.user.id)
+      const showUser = container.resolve(ShowUserService)
+      const user = await showUser.execute(auth.user.id)
 
       return response.json({ user: user, token: token.toJSON() })
     } catch (error) {

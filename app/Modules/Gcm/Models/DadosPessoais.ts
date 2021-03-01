@@ -1,11 +1,14 @@
 import { DateTime } from 'luxon'
 import {
+  afterFind,
   BaseModel,
+  beforeFind,
   BelongsTo,
   belongsTo,
   column,
   hasOne,
   HasOne,
+  ModelQueryBuilderContract,
   scope,
 } from '@ioc:Adonis/Lucid/Orm'
 
@@ -113,6 +116,17 @@ export default class DadosPessoais extends BaseModel {
   @belongsTo(() => Municipio, { localKey: 'id', foreignKey: 'municipio_nascimento_id' })
   public municipio_nascimento: BelongsTo<typeof Municipio>
 
+  /* --------------------------------- HOOKS --------------------------------- */
+
+  @beforeFind()
+  public static async ignoreDeleted(query: ModelQueryBuilderContract<typeof Gcm>): Promise<void> {
+    query.whereNot('is_deleted', true)
+  }
+
+  @afterFind()
+  public static async preload(dados_pessoais: DadosPessoais): Promise<void> {
+    await dados_pessoais.preload('municipio_nascimento')
+  }
   /* --------------------------------- SCOPES --------------------------------- */
 
   public static scopeSearchQuery = scope((query, search) => {

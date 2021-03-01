@@ -1,56 +1,65 @@
+import { container } from 'tsyringe'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import validator from 'validator'
 import isUUID = validator.isUUID
 
 import Gcm from 'App/Modules/Gcm/Models/Gcm'
 
-import IndexGcmService from '../Services/gcm/IndexGcmService'
-import ShowGcmService from 'App/Modules/Gcm/Services/gcm/ShowGcmService'
+import {
+  CreateDadosPessoaisValidator,
+  UpdateDadosPessoaisValidator,
+  CreateGcmValidator,
+  UpdateGcmValidator,
+} from 'App/Modules/Gcm/Validators'
+
+import {
+  IndexGcmService,
+  ShowGcmService,
+  CreateGcmService,
+  UpdateGcmService,
+  DeleteGcmService,
+} from 'App/Modules/Gcm/Services'
+
 import CreateBairroService from 'App/Modules/Endereco/Services/bairro/CreateBairroService'
 import CreateEnderecoService from '../../Endereco/Services/endereco/CreateEnderecoService'
 import CreateDadosPessoaisService from '../Services/dados_pessoais/CreateDadosPessoaisService'
-import CreateGcmService from 'App/Modules/Gcm/Services/gcm/CreateGcmService'
+
 import CreateKeycodeService from 'App/Modules/User/Services/keycode/CreateKeycodeService'
 import UpdateBairroService from 'App/Modules/Endereco/Services/bairro/UpdateBairroService'
 import UpdateEnderecoService from 'App/Modules/Endereco/Services/endereco/UpdateEnderecoService'
 import UpdateDadosPessoaisService from 'App/Modules/Gcm/Services/dados_pessoais/UpdateDadosPessoaisService'
-import UpdateGcmService from 'App/Modules/Gcm/Services/gcm/UpdateGcmService'
-import DeleteGcmService from 'App/Modules/Gcm/Services/gcm/DeleteGcmService'
 
 import CreateGcmBairroValidator from 'App/Modules/Endereco/Validators/bairro/CreateGcmBairroValidator'
 import CreateGcmEnderecoValidator from 'App/Modules/Endereco/Validators/endereco/CreateGcmEnderecoValidator'
-import CreateDadosPessoaisValidator from 'App/Modules/Gcm/Validators/dados_pessoais/CreateDadosPessoaisValidator'
-import CreateGcmValidator from 'App/Modules/Gcm/Validators/gcm/CreateGcmValidator'
-import UpdateDadosPessoaisValidator from 'App/Modules/Gcm/Validators/dados_pessoais/UpdateDadosPessoaisValidator'
+
 import UpdateEnderecoValidator from 'App/Modules/Endereco/Validators/endereco/UpdateEnderecoValidator'
-import UpdateGcmValidator from 'App/Modules/Gcm/Validators/gcm/UpdateGcmValidator'
 
 import AppException from 'App/Shared/Exceptions/AppException'
 import NotFoundException from 'App/Shared/Exceptions/NotFoundException'
 import UpdateGcmBairroValidator from 'App/Modules/Endereco/Validators/bairro/UpdateGcmBairroValidator'
 
 export default class GcmsController {
-  //* -> INDEX
   public async index({ request, response }: HttpContextContract) {
     const search = request.input('search', '')
 
-    const gcms = await IndexGcmService.execute(search)
+    const indexGcms = container.resolve(IndexGcmService)
+    const gcms = await indexGcms.execute(search)
+
     return response.json(gcms)
   }
 
-  //* -> SHOW
   public async show({ request, response }: HttpContextContract) {
     const { id } = request.params()
     if (!isUUID(id, 4)) {
       throw new AppException('Erro ao processar informações: parâmetro incorreto.')
     }
 
-    const gcm = await ShowGcmService.execute(id)
+    const showGcm = container.resolve(ShowGcmService)
+    const gcm = await showGcm.execute(id)
 
     return response.json(gcm)
   }
 
-  //* -> CREATE
   public async create({ request, response }: HttpContextContract) {
     const dados_pessoais_dto = await request.validate(CreateDadosPessoaisValidator)
     const bairro_dto = await request.validate(CreateGcmBairroValidator)
@@ -71,21 +80,20 @@ export default class GcmsController {
     // -> create dados pessoais
     const dados_pessoais_id = await CreateDadosPessoaisService.execute(dados_pessoais_dto)
 
-    // -> create gcm
-    const gcm_id = await CreateGcmService.execute({
+    const createGcm = container.resolve(CreateGcmService)
+    const gcm_id = await createGcm.execute({
       nome_guerra: gcm_dto.nome_guerra,
       dados_pessoais_id,
       endereco_id,
       atribuicao: gcm_dto.atribuicao,
     })
 
-    // -> create keycode
-    const keycode = await CreateKeycodeService.execute({ gcm_id, role_name })
+    const createKeycode = container.resolve(CreateKeycodeService)
+    const keycode = await createKeycode.execute({ gcm_id, role_name })
 
-    return response.json(keycode)
+    return response.json({ keycode })
   }
 
-  //* -> UPDATE
   public async update({ request, response }: HttpContextContract) {
     const { id } = request.params()
     if (!isUUID(id, 4)) {
@@ -159,7 +167,8 @@ export default class GcmsController {
     })
 
     // -> update gcm
-    const gcm_id = await UpdateGcmService.execute({
+    const updateGcm = container.resolve(UpdateGcmService)
+    const gcm_id = await updateGcm.execute({
       gcm_id: gcm_exists.id,
       nome_guerra: gcm_dto.nome_guerra,
       dados_pessoais_id,
@@ -172,14 +181,14 @@ export default class GcmsController {
     return response.json(gcm_id)
   }
 
-  //* -> DELETE
   public async delete({ request, response }: HttpContextContract) {
     const { id } = request.params()
     if (!isUUID(id, 4)) {
       throw new AppException('Erro ao processar informações: parâmetro incorreto.')
     }
 
-    await DeleteGcmService.execute(id)
+    const deleteGcm = container.resolve(DeleteGcmService)
+    await deleteGcm.execute(id)
 
     return response.json('Gcm deletado com sucesso.')
   }

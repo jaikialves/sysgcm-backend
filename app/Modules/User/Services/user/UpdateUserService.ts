@@ -1,4 +1,6 @@
-import User from 'App/Modules/User/Models/User'
+import { inject, injectable } from 'tsyringe'
+import { IUsersRepository } from 'App/Modules/User/Interfaces'
+
 import AppException from 'App/Shared/Exceptions/AppException'
 
 interface IRequest {
@@ -8,18 +10,22 @@ interface IRequest {
   password: string
 }
 
-class UpdateUserService {
+@injectable()
+export class UpdateUserService {
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository
+  ) {}
+
   public async execute({ user_id, nome_usuario, email, password }: IRequest) {
-    const user = await User.findBy('id', user_id)
+    const user = await this.usersRepository.findById(user_id)
     if (!user) {
       return new AppException('Erro ao atualizar usuário, tente novamente mais tarde')
     }
 
     user.merge({ nome_usuario, email, password })
-    await user.save()
+    await this.usersRepository.update(user)
 
     return user
   }
 }
-
-export default new UpdateUserService()

@@ -18,6 +18,8 @@ export default class Bairros extends BaseSchema {
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
 
+      table.boolean('is_deleted').defaultTo(false)
+
       table.timestamps(true)
     })
   }

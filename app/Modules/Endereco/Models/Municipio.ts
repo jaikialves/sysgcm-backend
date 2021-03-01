@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
 import {
+  afterFind,
   BaseModel,
   BelongsTo,
   belongsTo,
@@ -47,6 +48,13 @@ export default class Municipio extends BaseModel {
 
   @hasOne(() => DadosPessoais, { localKey: 'id', foreignKey: 'municipio_nascimento_id' })
   public dados_pessoais: HasOne<typeof DadosPessoais>
+
+  /* --------------------------------- HOOKS --------------------------------- */
+
+  @afterFind()
+  public static async preload(municipio: Municipio): Promise<void> {
+    await municipio.preload('estado')
+  }
 
   /* --------------------------------- SCOPES --------------------------------- */
 

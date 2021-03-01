@@ -1,29 +1,42 @@
-import Gcm from 'App/Modules/Gcm/Models/Gcm'
-import Keycode from 'App/Modules/User/Models/Keycode'
+import { injectable, inject } from 'tsyringe'
+import crypto from 'crypto'
+
+import { IKeycodesRepository, IRolesRepository } from 'App/Modules/User/Interfaces'
+import { IGcmsRepository } from 'App/Modules/Gcm/Interfaces/IGcmsRepository'
 
 import NotFoundException from 'App/Shared/Exceptions/NotFoundException'
-import crypto from 'crypto'
-import Role from 'App/Modules/User/Models/Role'
 
 interface IRequestData {
   gcm_id: string
   role_name: string
 }
 
+@injectable()
 class CreateKeycodeService {
+  constructor(
+    @inject('GcmsRepository')
+    private gcmsRepository: IGcmsRepository,
+
+    @inject('KeycodesRepository')
+    private keycodesRepository: IKeycodesRepository,
+
+    @inject('RolesRepository')
+    private rolesRepository: IRolesRepository
+  ) {}
+
   public async execute({ gcm_id, role_name }: IRequestData) {
     // -> check gcm exists
-    const gcm_exists = await Gcm.findBy('id', gcm_id)
+    const gcm_exists = await this.gcmsRepository.findById(gcm_id)
     if (!gcm_exists) {
       throw new NotFoundException('Erro no cadastro: Gcm não encontrado.')
     }
 
-    const role_exists = await Role.findBy('name', role_name)
+    const role_exists = await this.rolesRepository.findByName(role_name)
     if (!role_exists) {
       throw new NotFoundException('Erro no cadastro: Role não encontrada.')
     }
 
-    const keycode = await Keycode.create({
+    const keycode = await this.keycodesRepository.create({
       gcm_id,
       keycode: await this.generateUniqueKeycode(4),
       role_name: role_exists.name,
@@ -35,11 +48,11 @@ class CreateKeycodeService {
     }
   }
 
-  private async generateUniqueKeycode(size: number) {
+  protected async generateUniqueKeycode(size: number) {
     let key = crypto.randomBytes(size).toString('hex').toLocaleUpperCase()
 
     // -> check key exists
-    const key_exists = await Keycode.findBy('keycode', key)
+    const key_exists = this.keycodesRepository.findByKeycode(key)
     if (key_exists) {
       key = await this.generateUniqueKeycode(size)
     }
@@ -48,4 +61,4 @@ class CreateKeycodeService {
   }
 }
 
-export default new CreateKeycodeService()
+export default CreateKeycodeService

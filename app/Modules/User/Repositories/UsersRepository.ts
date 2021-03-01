@@ -1,10 +1,32 @@
-import IUsersRepository from 'App/Modules/User/Interfaces/IUsersRepository'
 import User from 'App/Modules/User/Models/User'
-import ICreateUserDTO from 'App/Modules/User/DTOs/user/ICreateUserDTO'
 
-export default class UsersRepository implements IUsersRepository {
+import { IUsersRepository } from 'App/Modules/User/Interfaces/IUsersRepository'
+import { ICreateUserDTO } from 'App/Modules/User/DTOs/ICreateUserDTO'
+
+export class UsersRepository implements IUsersRepository {
   public async index(): Promise<User[]> {
     return await User.all()
+  }
+
+  public async show(user_id: string): Promise<User | null> {
+    return User.query()
+      .where('id', user_id)
+      .whereNot('status', false)
+      .preload('gcm', (query) => {
+        query
+          .preload('dados_pessoais', (query) => {
+            query.preload('municipio_nascimento')
+          })
+          .preload('endereco', (query) => {
+            query.preload('bairro', (query) => {
+              query.preload('municipio', (query) => {
+                query.preload('estado')
+              })
+            })
+          })
+          .first()
+      })
+      .first()
   }
 
   public async create(data: ICreateUserDTO): Promise<User> {

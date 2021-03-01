@@ -8,7 +8,7 @@ Route.get('/', async () => {
 
 Route.group(() => {
   Route.post('/login', '/App/Modules/User/Controllers/AuthController.login').as('auth.login')
-  Route.post('/register', '/App/Modules/User/UsersController.create').as('user.create')
+  Route.post('/register', '/App/Modules/User/Controllers/UsersController.create').as('user.create')
 })
 
 //? -> PRIVATE

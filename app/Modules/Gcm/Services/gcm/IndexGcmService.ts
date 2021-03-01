@@ -1,28 +1,21 @@
-import Gcm from 'App/Modules/Gcm/Models/Gcm'
+import { inject, injectable } from 'tsyringe'
+
+import { IGcmsRepository } from 'App/Modules/Gcm/Interfaces'
+
 import AppException from 'App/Shared/Exceptions/AppException'
 
-class IndexGcmService {
+@injectable()
+export class IndexGcmService {
+  constructor(
+    @inject('GcmsRepository')
+    private gcmsRepository: IGcmsRepository
+  ) {}
+
   public async execute(search: string) {
     try {
-      return await Gcm.query()
-        .apply((scopes) => {
-          scopes.scopeSearchQuery(search)
-        })
-        .where('status', true)
-        .preload('dados_pessoais', (query) => {
-          query.preload('municipio_nascimento')
-        })
-        .preload('endereco', (query) => {
-          query.preload('bairro', (query) => {
-            query.preload('municipio', (query) => {
-              query.preload('estado')
-            })
-          })
-        })
+      return await this.gcmsRepository.index(search)
     } catch (error) {
       throw new AppException(`Erro ao processar dados, tente novamente mais tarde. ${error}`)
     }
   }
 }
-
-export default new IndexGcmService()

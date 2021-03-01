@@ -2,7 +2,7 @@ import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { atribuicao } from 'App/Modules/Gcm/Models/types/EnumTypes'
 
-export default class UpdateGcmValidator {
+export class UpdateGcmValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({

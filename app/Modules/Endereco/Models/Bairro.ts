@@ -1,16 +1,20 @@
 import { DateTime } from 'luxon'
 import {
+  afterFind,
   BaseModel,
+  beforeFind,
   BelongsTo,
   belongsTo,
   column,
   HasMany,
   hasMany,
+  ModelQueryBuilderContract,
   scope,
 } from '@ioc:Adonis/Lucid/Orm'
 
 import Endereco from 'App/Modules/Endereco/Models/Enderecos'
 import Municipio from 'App/Modules/Endereco/Models/Municipio'
+import Gcm from 'App/Modules/Gcm/Models/Gcm'
 
 export default class Bairro extends BaseModel {
   @column({ isPrimary: true })
@@ -28,6 +32,9 @@ export default class Bairro extends BaseModel {
   @column({ serializeAs: null })
   public municipio_id: string
 
+  @column({ serializeAs: null })
+  public is_deleted: boolean
+
   @column.dateTime({ autoCreate: true, serializeAs: null })
   public createdAt: DateTime
 
@@ -41,6 +48,18 @@ export default class Bairro extends BaseModel {
 
   @belongsTo(() => Municipio, { localKey: 'id', foreignKey: 'municipio_id' })
   public municipio: BelongsTo<typeof Municipio>
+
+  /* --------------------------------- HOOKS --------------------------------- */
+
+  @beforeFind()
+  public static async ignoreDeleted(query: ModelQueryBuilderContract<typeof Gcm>): Promise<void> {
+    query.whereNot('is_deleted', true)
+  }
+
+  @afterFind()
+  public static async preload(bairro: Bairro): Promise<void> {
+    await bairro.preload('municipio')
+  }
 
   /* --------------------------------- SCOPES --------------------------------- */
 

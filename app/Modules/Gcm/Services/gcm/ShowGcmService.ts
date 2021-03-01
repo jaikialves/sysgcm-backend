@@ -1,29 +1,20 @@
-import Gcm from 'App/Modules/Gcm/Models/Gcm'
+import { inject, injectable } from 'tsyringe'
+import { IGcmsRepository } from 'App/Modules/Gcm/Interfaces'
+
 import NotFoundException from 'App/Shared/Exceptions/NotFoundException'
 
-class ShowGcmService {
-  public async execute(gcm_id: string) {
-    const gcm_exists = await Gcm.query()
-      .where('id', gcm_id)
-      .where('status', true)
-      .preload('dados_pessoais', (query) => {
-        query.preload('municipio_nascimento')
-      })
-      .preload('endereco', (query) => {
-        query.preload('bairro', (query) => {
-          query.preload('municipio', (query) => {
-            query.preload('estado')
-          })
-        })
-      })
-      .first()
+@injectable()
+export class ShowGcmService {
+  constructor(
+    @inject('GcmsRepository')
+    private gcmsRepository: IGcmsRepository
+  ) {}
 
-    if (!gcm_exists) {
+  public async execute(gcm_id: string) {
+    try {
+      return this.gcmsRepository.findById(gcm_id)
+    } catch (error) {
       throw new NotFoundException('Gcm não encontrado')
     }
-
-    return gcm_exists
   }
 }
-
-export default new ShowGcmService()

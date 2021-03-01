@@ -1,11 +1,20 @@
-import Escala from 'App/Modules/Gcm/Models/Escala'
-import User from 'App/Modules/User/Models/User'
-import AppException from 'App/Shared/Exceptions/AppException'
+import { injectable, inject } from 'tsyringe'
 
-class IndexEscalaService {
+import Escala from 'App/Modules/Gcm/Models/Escala'
+
+import AppException from 'App/Shared/Exceptions/AppException'
+import { IUsersRepository } from 'App/Modules/User/Interfaces'
+
+injectable()
+export class IndexEscalaService {
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository
+  ) {}
+
   public async execute(user_id: string) {
     try {
-      const user = await User.findBy('id', user_id)
+      const user = await this.usersRepository.findById(user_id)
 
       if (!user) {
         return new AppException('Não foi possível listar as escalas, tente novamente mais tarde.')
@@ -17,5 +26,3 @@ class IndexEscalaService {
     }
   }
 }
-
-export default new IndexEscalaService()

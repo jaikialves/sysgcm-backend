@@ -1,31 +1,26 @@
-import AppException from 'App/Shared/Exceptions/AppException'
-import User from 'App/Modules/User/Models/User'
+import { inject, injectable } from 'tsyringe'
 
-class ShowUserService {
+import AppException from 'App/Shared/Exceptions/AppException'
+
+import { IUsersRepository } from 'App/Modules/User/Interfaces'
+
+@injectable()
+export class ShowUserService {
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository
+  ) {}
+
   public async execute(user_id: string) {
+    if (!user_id) {
+      throw new AppException('Erro ao mostar usuário, o parâmetro incorreto.')
+    }
+
     try {
-      return await User.query()
-        .where('id', user_id)
-        .whereNot('status', false)
-        .preload('gcm', (query) => {
-          query
-            .preload('dados_pessoais', (query) => {
-              query.preload('municipio_nascimento')
-            })
-            .preload('endereco', (query) => {
-              query.preload('bairro', (query) => {
-                query.preload('municipio', (query) => {
-                  query.preload('estado')
-                })
-              })
-            })
-            .first()
-        })
+      return await this.usersRepository.show(user_id)
     } catch (error) {
       console.log(error)
       throw new AppException('Erro ao mostar usuário, tente novamente mais tarde.')
     }
   }
 }
-
-export default new ShowUserService()

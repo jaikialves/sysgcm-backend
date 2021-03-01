@@ -14,6 +14,7 @@ export default class Enderecos extends BaseSchema {
       table.string('nome_local', 40).nullable()
       table.string('codigo_endereco', 6).nullable()
       table.text('observacao').nullable()
+
       table
         .uuid('bairro_id')
         .references('id')
@@ -22,6 +23,7 @@ export default class Enderecos extends BaseSchema {
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
 
+      table.boolean('is_deleted').defaultTo(false)
       table.timestamps(true)
     })
   }

@@ -1,9 +1,12 @@
 import { inject, injectable } from 'tsyringe'
 
-import IGcmsRepository from 'App/Modules/Gcm/Interfaces/IGcmsRepository'
-import IRolesRepository from 'App/Modules/User/Interfaces/IRolesRepository'
-import IUsersRepository from 'App/Modules/User/Interfaces/IUsersRepository'
-import IKeycodesRepository from 'App/Modules/User/Interfaces/IKeycodesRepository'
+import { IGcmsRepository } from 'App/Modules/Gcm/Interfaces/IGcmsRepository'
+
+import {
+  IKeycodesRepository,
+  IUsersRepository,
+  IRolesRepository,
+} from 'App/Modules/User/Interfaces'
 
 import AppException from 'App/Shared/Exceptions/AppException'
 import NotFoundException from 'App/Shared/Exceptions/NotFoundException'
@@ -16,7 +19,7 @@ interface IRequestData {
 }
 
 @injectable()
-class CreateUserService {
+export class CreateUserService {
   constructor(
     @inject('GcmsRepository')
     private gcmsRepository: IGcmsRepository,
@@ -27,7 +30,7 @@ class CreateUserService {
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
 
-    @inject('KeycodesRepository')
+    @inject('RolesRepository')
     private rolesRepository: IRolesRepository
   ) {}
 
@@ -66,13 +69,10 @@ class CreateUserService {
         gcm_id: gcm.id,
         role_id: role_exists.id,
       })
-      await user.related('roles').attach([role_exists.id])
 
-      return user.id
+      return { user_id: user.id }
     } catch (error) {
       throw new AppException('Erro ao criar usuário, tente novamente mais tarde.')
     }
   }
 }
-
-export default CreateUserService
